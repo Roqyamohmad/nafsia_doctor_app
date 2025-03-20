@@ -1,0 +1,56 @@
+name: nafsia_app
+description: "A new Flutter project."
+
+# Prevent accidental publishing to pub.dev
+publish_to: 'none'
+
+# Application versioning
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.5.4 <4.0.0'
+
+# Dependencies
+dependencies:
+  cupertino_icons: ^1.0.8
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_screenutil: ^5.9.3
+  flutter_svg: ^2.0.17
+  image_picker: ^1.1.2
+  intl: 0.19.0
+  skeletonizer: ^1.4.3
+
+dev_dependencies:
+  flutter_launcher_icons: ^0.14.3
+  flutter_lints: ^4.0.0
+  flutter_test:
+    sdk: flutter
+
+# Flutter settings
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+
+  fonts:
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo-Regular.ttf
+        - asset: assets/fonts/Cairo-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Cairo-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Cairo-Bold.ttf
+          weight: 700
+
+flutter_intl:
+  enabled: true
+
+flutter_assets:
+  assets_path: assets/images/
+  output_path: lib/core/utils/
+  filename: app_images.dart
