@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nafsia_app/core/helper_functions/on_generate_routes.dart';
 import 'package:nafsia_app/core/utils/app_colors.dart';
 import 'package:nafsia_app/core/utils/app_images.dart';
 import 'package:nafsia_app/core/utils/spacing.dart';
@@ -6,6 +7,7 @@ import 'package:nafsia_app/core/widgets/custom_button.dart' show CustomButton;
 import 'package:nafsia_app/core/widgets/custom_text_field.dart'
     show CustomTextFormField;
 import 'package:nafsia_app/core/widgets/password_field.dart';
+import 'package:nafsia_app/features/Home/presentation/views/main_view.dart';
 import 'package:nafsia_app/features/auth/presentation/views/reset_password_view.dart';
 import 'package:nafsia_app/features/auth/presentation/views/widget/dont_have_account.dart'
     show DontHaveAnAccount;
@@ -53,8 +55,11 @@ class SigninViewBody extends StatelessWidget {
               ),
             ),
             verticalSpace(16),
-            const CustomButton(
+            CustomButton(
               text: 'تسجيل الدخول',
+              onPressed: () {
+                Navigator.pushNamed(context, MainView.routeName);
+              },
             ),
             verticalSpace(16),
             const DontHaveAnAccount(),

@@ -10,7 +10,6 @@ class UserEntity {
   final String email;
   final String password;
   final String? imagePath; // Optional field for profile image
-
   UserEntity({
     required this.firstName,
     required this.lastName,
