@@ -1,31 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_material_pickers/flutter_material_pickers.dart';
-import 'package:nafsia_app/core/helper_functions/pick_seat.dart' show pickSeats;
+import 'package:nafsia_app/core/utils/app_colors.dart' show AppColors;
+import 'package:nafsia_app/core/utils/app_text_styles.dart';
+import 'seat_counter.dart';
 
-class SeatSelection extends StatefulWidget {
-  const SeatSelection({super.key});
+class SeatSelection extends StatelessWidget {
+  final int selectedSeats;
+  final Function(int) onSeatsChanged;
 
-  @override
-  State<SeatSelection> createState() => _SeatSelectionState();
-}
+  const SeatSelection({
+    super.key,
+    required this.selectedSeats,
+    required this.onSeatsChanged,
+  });
 
-class _SeatSelectionState extends State<SeatSelection> {
-  int selectedSeats = 1;
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: const Text("عدد المقاعد"),
-      subtitle: Text("$selectedSeats مقعد"),
-      trailing: const Icon(Icons.arrow_drop_down),
-      onTap: () {
-        pickSeats(
-          context: context,
-          selectedSeats: selectedSeats,
-          onSeatsSelected: (value) {
-            setState(() => selectedSeats = value);
-          },
-        );
-      },
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.backGroundyColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SeatCounter(
+            currentSeats: selectedSeats,
+            onSeatsChanged: onSeatsChanged,
+          ),
+          Column(
+            children: [
+              Text("عدد المقاعد", style: TextStyles.bold16),
+              Text(
+                "$selectedSeats مقعد",
+                style: TextStyles.regular16.copyWith(color: Colors.blueGrey),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

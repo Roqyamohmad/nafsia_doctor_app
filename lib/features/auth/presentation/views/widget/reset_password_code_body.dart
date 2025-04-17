@@ -20,7 +20,7 @@ class ResetPasswordEmailBody extends StatelessWidget {
             title: 'لقد أرسلنا بريدًا إلكترونيًا إلى y********@g****.com',
           ),
           verticalSpace(16),
-          const CustomTextFormField(
+          CustomTextFormField(
             textInputType: TextInputType.emailAddress,
             labelText: 'ادخل الرمز',
           ),

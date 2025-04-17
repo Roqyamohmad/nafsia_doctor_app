@@ -28,7 +28,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: width ?? double.infinity,
-      height: height ?? 50.h,
+      height: height ?? 70.h,
       child: TextButton(
         style: TextButton.styleFrom(
           shape: RoundedRectangleBorder(

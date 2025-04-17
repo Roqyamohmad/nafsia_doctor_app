@@ -4,6 +4,7 @@ import 'package:nafsia_app/core/helper_functions/is_device_in_portrait.dart';
 import 'package:nafsia_app/features/Home/domain/entities/buttom_navigation_bar_entity.dart';
 import 'package:nafsia_app/features/Home/presentation/views/widget/buttom_navigation_bar_item.dart';
 
+// ignore: must_be_immutable
 class CustomButtonNavigationBar extends StatefulWidget {
   int selectedIndex = 0;
   ValueChanged<int> onItemTapped;

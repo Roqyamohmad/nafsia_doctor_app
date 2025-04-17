@@ -18,7 +18,7 @@ class ResetPasswordEmailBody extends StatelessWidget {
             title: ' أدخل بريدك الإلكتروني لتلقي رمز إعادة التعيين',
           ),
           verticalSpace(16),
-          const CustomTextFormField(
+          CustomTextFormField(
             textInputType: TextInputType.emailAddress,
             labelText: 'البريد الإلكتروني',
           ),

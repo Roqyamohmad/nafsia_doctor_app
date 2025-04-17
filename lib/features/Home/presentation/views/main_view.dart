@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nafsia_app/features/Home/presentation/views/appointments_view.dart';
 import 'package:nafsia_app/features/Home/presentation/views/chats_view.dart'
     show ChatsView;
 import 'package:nafsia_app/features/Home/presentation/views/home_view.dart'
@@ -35,9 +36,7 @@ class _MainViewState extends State<MainView> {
           children: const [
             HomeView(),
             ChatsView(),
-            Center(
-              child: Text('Notifications'),
-            ),
+            AppointmentsView(),
             Center(
               child: Text('Profile'),
             ),

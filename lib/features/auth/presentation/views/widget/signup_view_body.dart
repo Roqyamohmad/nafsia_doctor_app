@@ -37,17 +37,17 @@ class _SignupViewBodyState extends State<SignupViewBody> {
               title: 'انضم إلينا',
             ),
             verticalSpace(20),
-            const CustomTextFormField(
+            CustomTextFormField(
               textInputType: TextInputType.text,
               labelText: 'الاسم الاول',
             ),
             verticalSpace(16),
-            const CustomTextFormField(
+            CustomTextFormField(
               textInputType: TextInputType.text,
               labelText: 'الاسم الثاني',
             ),
             verticalSpace(16),
-            const CustomTextFormField(
+            CustomTextFormField(
                 textInputType: TextInputType.number, labelText: 'العمر'),
             verticalSpace(16),
             CustomDropdownFormField(
@@ -75,22 +75,22 @@ class _SignupViewBodyState extends State<SignupViewBody> {
               },
             ),
             verticalSpace(16),
-            const CustomTextFormField(
+            CustomTextFormField(
               textInputType: TextInputType.text,
               labelText: 'التخصص الطبي',
             ),
             verticalSpace(16),
-            const CustomTextFormField(
+            CustomTextFormField(
               textInputType: TextInputType.number,
               labelText: 'رقم الترخيص الطبي',
             ),
             verticalSpace(16),
-            const CustomTextFormField(
+            CustomTextFormField(
               textInputType: TextInputType.text,
               labelText: 'الجهة المانحه للترخيص',
             ),
             verticalSpace(16),
-            const CustomTextFormField(
+            CustomTextFormField(
               textInputType: TextInputType.emailAddress,
               labelText: 'البريد الإلكتروني',
             ),

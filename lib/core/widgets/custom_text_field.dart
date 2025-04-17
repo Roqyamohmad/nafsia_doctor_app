@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:nafsia_app/core/utils/app_text_styles.dart';
 
 class CustomTextFormField extends StatelessWidget {
-  const CustomTextFormField({
+  CustomTextFormField({
     super.key,
     required this.labelText,
     required this.textInputType,
@@ -12,9 +12,11 @@ class CustomTextFormField extends StatelessWidget {
     this.onSaved,
     this.validator,
     this.obscureText = false,
+    this.controller,
   });
 
   final String labelText;
+  final TextEditingController? controller;
   final TextInputType textInputType;
   final Widget? suffixIcon;
   final void Function(String?)? onSaved;
@@ -27,6 +29,7 @@ class CustomTextFormField extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl, // Ensures right-aligned text
       child: TextFormField(
+        controller: controller,
         obscureText: obscureText,
         onSaved: onSaved,
         validator: needsValidation

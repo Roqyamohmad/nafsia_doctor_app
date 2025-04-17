@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:nafsia_app/features/Home/presentation/views/chats_view_widgets/support_groups_view.dart'
-    show SupportGroupsView;
+
 import 'package:nafsia_app/features/Home/presentation/views/main_view.dart'
     show MainView;
 import 'package:nafsia_app/features/auth/presentation/views/reset_password_view.dart';
@@ -23,8 +22,6 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => const ResetPasswordView());
     case MainView.routeName:
       return MaterialPageRoute(builder: (context) => const MainView());
-    case SupportGroupsView.routename:
-      return MaterialPageRoute(builder: (context) => const SupportGroupsView());
     default:
       return MaterialPageRoute(builder: (context) => const Scaffold());
   }
