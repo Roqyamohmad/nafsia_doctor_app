@@ -37,23 +37,23 @@ class _SignupViewBodyState extends State<SignupViewBody> {
               title: 'انضم إلينا',
             ),
             verticalSpace(20),
-            CustomTextFormField(
+            const CustomTextFormField(
               textInputType: TextInputType.text,
               labelText: 'الاسم الاول',
             ),
             verticalSpace(16),
-            CustomTextFormField(
+            const CustomTextFormField(
               textInputType: TextInputType.text,
               labelText: 'الاسم الثاني',
             ),
             verticalSpace(16),
-            CustomTextFormField(
+            const CustomTextFormField(
                 textInputType: TextInputType.number, labelText: 'العمر'),
             verticalSpace(16),
             CustomDropdownFormField(
               hintText: 'الجنس',
               needsValidation: true,
-              items: ['ذكر', 'أنثى'],
+              items: const ['ذكر', 'أنثى'],
               value: selectedGender, // Pass the selected value
               onChanged: (newValue) {
                 setState(() {
@@ -75,22 +75,22 @@ class _SignupViewBodyState extends State<SignupViewBody> {
               },
             ),
             verticalSpace(16),
-            CustomTextFormField(
+            const CustomTextFormField(
               textInputType: TextInputType.text,
               labelText: 'التخصص الطبي',
             ),
             verticalSpace(16),
-            CustomTextFormField(
+            const CustomTextFormField(
               textInputType: TextInputType.number,
               labelText: 'رقم الترخيص الطبي',
             ),
             verticalSpace(16),
-            CustomTextFormField(
+            const CustomTextFormField(
               textInputType: TextInputType.text,
               labelText: 'الجهة المانحه للترخيص',
             ),
             verticalSpace(16),
-            CustomTextFormField(
+            const CustomTextFormField(
               textInputType: TextInputType.emailAddress,
               labelText: 'البريد الإلكتروني',
             ),

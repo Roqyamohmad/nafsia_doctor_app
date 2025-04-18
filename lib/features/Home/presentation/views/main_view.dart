@@ -6,6 +6,8 @@ import 'package:nafsia_app/features/Home/presentation/views/home_view.dart'
     show HomeView;
 import 'package:nafsia_app/features/Home/presentation/views/widget/custom_buttom_navigation_bar.dart';
 
+import 'profile_view.dart';
+
 class MainView extends StatefulWidget {
   const MainView({super.key});
   static const routeName = 'mainView';
@@ -37,9 +39,7 @@ class _MainViewState extends State<MainView> {
             HomeView(),
             ChatsView(),
             AppointmentsView(),
-            Center(
-              child: Text('Profile'),
-            ),
+            ProfileView(),
           ],
         ),
       ),

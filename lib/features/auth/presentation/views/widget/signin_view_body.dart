@@ -32,7 +32,7 @@ class SigninViewBody extends StatelessWidget {
               title: 'مرحبًا بكم في نفسية',
             ),
             verticalSpace(20),
-            CustomTextFormField(
+            const CustomTextFormField(
               // hintText: 'البريد الإلكتروني',
               textInputType: TextInputType.emailAddress,
               labelText: 'البريد الإلكتروني',

@@ -4,6 +4,7 @@ class SeatCounter extends StatelessWidget {
   final int currentSeats;
   final Function(int) onSeatsChanged;
 
+  // ignore: use_super_parameters
   const SeatCounter({
     Key? key,
     required this.currentSeats,
@@ -20,7 +21,7 @@ class SeatCounter extends StatelessWidget {
           constraints: const BoxConstraints.tightFor(),
           style: ButtonStyle(
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            padding: MaterialStateProperty.all(EdgeInsets.zero),
+            padding: WidgetStateProperty.all(EdgeInsets.zero),
           ),
           onPressed: () {
             if (currentSeats < 10) {
@@ -33,8 +34,8 @@ class SeatCounter extends StatelessWidget {
           constraints: const BoxConstraints.tightFor(),
           style: ButtonStyle(
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            padding: MaterialStateProperty.all(EdgeInsets.zero),
-            minimumSize: MaterialStateProperty.all(const Size(0, 0)),
+            padding: WidgetStateProperty.all(EdgeInsets.zero),
+            minimumSize: WidgetStateProperty.all(const Size(0, 0)),
           ),
           onPressed: () {
             if (currentSeats > 1) {

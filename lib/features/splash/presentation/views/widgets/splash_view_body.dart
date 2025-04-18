@@ -59,6 +59,7 @@ class _SplashViewBodyState extends State<SplashViewBody> {
 
   void excuteNaviagtion() {
     Future.delayed(const Duration(seconds: 3), () {
+      // ignore: use_build_context_synchronously
       Navigator.pushNamed(context, SigninView.routeName);
     });
   }

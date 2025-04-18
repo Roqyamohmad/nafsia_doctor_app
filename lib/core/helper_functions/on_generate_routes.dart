@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:nafsia_app/features/Home/presentation/views/main_view.dart'
     show MainView;
