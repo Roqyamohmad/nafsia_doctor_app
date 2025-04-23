@@ -1,11 +1,14 @@
 import 'dart:io' show File;
 
 import 'package:flutter/material.dart';
+import 'package:nafsia_app/core/utils/app_text_styles.dart' show TextStyles;
 import 'package:nafsia_app/core/utils/spacing.dart' show verticalSpace;
 import 'package:nafsia_app/core/widgets/custom_button.dart' show CustomButton;
 import 'package:nafsia_app/core/widgets/custom_text_field.dart';
 import 'package:nafsia_app/core/widgets/password_field.dart';
 import 'package:nafsia_app/features/auth/presentation/views/widget/already_have_account.dart';
+import 'package:nafsia_app/features/auth/presentation/views/widget/index.dart'
+    show showDoctorSessionDialog;
 import 'package:nafsia_app/features/auth/presentation/views/widget/login_view_body_logo_and_title.dart';
 import 'package:nafsia_app/features/auth/presentation/views/widget/terms_and_conditions.dart'
     show TermsAndConditions;
@@ -97,10 +100,30 @@ class _SignupViewBodyState extends State<SignupViewBody> {
             verticalSpace(16),
             const PasswordField(),
             verticalSpace(16),
-            ImageField(
-              onFileChanged: (image) {
-                this.image = image;
+            CustomButton(
+              text: 'تحديد مواعيد الجلسات',
+              onPressed: () {
+                showDoctorSessionDialog(context);
               },
+            ),
+            verticalSpace(16),
+            Directionality(
+              textDirection: TextDirection.rtl,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'صورة الرخصة الطبية',
+                    style: TextStyles.bold16.copyWith(color: Colors.blueGrey),
+                  ),
+                  const SizedBox(height: 8),
+                  ImageField(
+                    onFileChanged: (image) {
+                      this.image = image;
+                    },
+                  ),
+                ],
+              ),
             ),
             TermsAndConditions(
               onChanged: (value) {

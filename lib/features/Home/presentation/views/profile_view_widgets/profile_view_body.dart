@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:nafsia_app/core/utils/app_colors.dart';
 import 'package:nafsia_app/core/utils/app_images.dart' show Assets;
 import 'package:nafsia_app/core/utils/app_text_styles.dart' show TextStyles;
+import 'package:nafsia_app/features/Home/presentation/views/profile_view_widgets/edit_profile_view.dart'
+    show EditProfileView;
+import 'package:nafsia_app/features/Home/presentation/views/widget/custom_main_view_app_bar.dart'
+    show CustomMainViewsAppBar;
 
 import 'build_info_tile.dart';
 
@@ -11,16 +15,15 @@ class ProfileViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('الملف الشخصي'),
-        centerTitle: true,
-      ),
       body: Directionality(
         textDirection: TextDirection.rtl, // تحديد الاتجاه من اليمين لليسار
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
+              const CustomMainViewsAppBar(
+                title: ('الملف الشخصي'),
+              ),
               const CircleAvatar(
                 radius: 60,
                 backgroundImage:
@@ -39,9 +42,16 @@ class ProfileViewBody extends StatelessWidget {
               const SizedBox(height: 20),
               ElevatedButton.icon(
                 onPressed: () {
-                  // انتقل إلى شاشة تعديل الملف الشخصي
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const EditProfileView(),
+                    ),
+                  );
                 },
-                icon: const Icon(Icons.edit),
+                icon: const Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                ),
                 label: const Text(
                   'تعديل الملف الشخصي',
                   style: TextStyle(color: Colors.white),

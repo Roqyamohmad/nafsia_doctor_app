@@ -52,9 +52,11 @@ class CustomDropdownFormField extends StatelessWidget {
         ),
         items: items
             .map((String gender) => DropdownMenuItem(
+              alignment: Alignment.centerRight,
                   value: gender,
                   child: Text(
                     gender,
+                    textAlign: TextAlign.right,
                     style: const TextStyle(
                       color: Color.fromARGB(255, 116, 127, 133),
                     ),

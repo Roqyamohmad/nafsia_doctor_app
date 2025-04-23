@@ -28,7 +28,7 @@ class TimeSelection extends StatelessWidget {
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         title: const Align(
           alignment: Alignment.centerRight,
           child: Text(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'custom_text_field.dart';
+import '../utils/app_text_styles.dart';
 
 class PasswordField extends StatefulWidget {
   const PasswordField({
@@ -18,26 +18,61 @@ class _PasswordFieldState extends State<PasswordField> {
   bool obscureText = true;
   @override
   Widget build(BuildContext context) {
-    return CustomTextFormField(
-      obscureText: obscureText,
-      onSaved: widget.onSaved,
-      suffixIcon: GestureDetector(
-        onTap: () {
-          obscureText = !obscureText;
-          setState(() {});
-        },
-        child: obscureText
-            ? const Icon(
-                Icons.remove_red_eye,
-                color: Color(0xffC9CECF),
-              )
-            : const Icon(
-                Icons.visibility_off,
-                color: Color(0xffC9CECF),
-              ),
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: TextFormField(
+        obscureText: obscureText,
+        onSaved: widget.onSaved,
+        //hintText: 'كلمة المرور',
+        keyboardType: TextInputType.visiblePassword,
+        decoration: InputDecoration(
+          suffixIcon: GestureDetector(
+            onTap: () {
+              obscureText = !obscureText;
+              setState(() {});
+            },
+            child: obscureText
+                ? const Icon(
+                    Icons.remove_red_eye,
+                    color: Color(0xffC9CECF),
+                  )
+                : const Icon(
+                    Icons.visibility_off,
+                    color: Color(0xffC9CECF),
+                  ),
+          ),
+          label: RichText(
+            text: TextSpan(
+              text: 'كلمة المرور',
+              style: TextStyles.bold13.copyWith(color: const Color(0xff949D9E)),
+              children: const [
+                TextSpan(
+                  text: ' *',
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 116, 127, 133),
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          filled: true,
+          fillColor: const Color(0xFFF9FAFA),
+          border: buildBorder(),
+          enabledBorder: buildBorder(),
+          focusedBorder: buildBorder(),
+        ),
+        textAlign: TextAlign.right,
       ),
-      //hintText: 'كلمة المرور',
-      textInputType: TextInputType.visiblePassword, labelText: 'كلمة المرور',
+    );
+  }
+
+  OutlineInputBorder buildBorder() {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+      borderSide: const BorderSide(
+        width: 1,
+        color: Color(0xFFE6E9E9),
+      ),
     );
   }
 }

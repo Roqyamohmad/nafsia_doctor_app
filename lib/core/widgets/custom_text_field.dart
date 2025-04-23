@@ -10,8 +10,10 @@ class CustomTextFormField extends StatelessWidget {
     this.needsValidation = true,
     this.onSaved,
     this.validator,
-    this.obscureText = false,
     this.controller,
+    this.maxLines,
+    this.minLines,
+    this.showAsterisk = true,
   });
 
   final String labelText;
@@ -19,17 +21,20 @@ class CustomTextFormField extends StatelessWidget {
   final TextInputType textInputType;
   final Widget? suffixIcon;
   final void Function(String?)? onSaved;
-  final bool obscureText;
   final String? Function(String?)? validator;
   final bool needsValidation;
+  final int? maxLines;
+  final int? minLines;
+  final bool showAsterisk;
 
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection: TextDirection.rtl, // Ensures right-aligned text
+      textDirection: TextDirection.rtl,
       child: TextFormField(
+        minLines: minLines,
+        maxLines: maxLines,
         controller: controller,
-        obscureText: obscureText,
         onSaved: onSaved,
         validator: needsValidation
             ? validator ??
@@ -43,20 +48,9 @@ class CustomTextFormField extends StatelessWidget {
         keyboardType: textInputType,
         decoration: InputDecoration(
           suffixIcon: suffixIcon,
-          label: RichText(
-            text: TextSpan(
-              text: labelText,
-              style: TextStyles.bold13.copyWith(color: const Color(0xff949D9E)),
-              children: const [
-                TextSpan(
-                  text: ' *',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 116, 127, 133),
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
+          labelText: showAsterisk ? '$labelText *' : labelText,
+          labelStyle:
+              TextStyles.bold13.copyWith(color: const Color(0xff949D9E)),
           filled: true,
           fillColor: const Color(0xFFF9FAFA),
           border: buildBorder(),

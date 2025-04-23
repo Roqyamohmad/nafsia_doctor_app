@@ -28,19 +28,22 @@ class _MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        bottomNavigationBar: CustomButtonNavigationBar(
-          onItemTapped: _onItemTapped,
-          selectedIndex: selectedIndex,
-        ),
-        body: IndexedStack(
-          index: selectedIndex,
-          children: const [
-            HomeView(),
-            ChatsView(),
-            AppointmentsView(),
-            ProfileView(),
-          ],
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(
+          bottomNavigationBar: CustomButtonNavigationBar(
+            onItemTapped: _onItemTapped,
+            selectedIndex: selectedIndex,
+          ),
+          body: IndexedStack(
+            index: selectedIndex,
+            children: const [
+              HomeView(),
+              ChatsView(),
+              AppointmentsView(),
+              ProfileView(),
+            ],
+          ),
         ),
       ),
     );

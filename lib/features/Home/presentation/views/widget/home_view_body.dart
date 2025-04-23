@@ -4,6 +4,8 @@ import 'package:nafsia_app/core/utils/constants.dart';
 import 'package:nafsia_app/core/utils/spacing.dart';
 import 'package:nafsia_app/core/widgets/custom_post_item.dart'
     show CustomPostItem;
+import 'package:nafsia_app/features/Home/presentation/views/widget/add_post_view.dart'
+    show AddPostView;
 import 'package:nafsia_app/features/Home/presentation/views/widget/custom_home_app_bar.dart';
 
 class HomeViewBody extends StatelessWidget {
@@ -16,7 +18,12 @@ class HomeViewBody extends StatelessWidget {
         width: 40,
         height: 40,
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AddPostView()),
+            );
+          },
           backgroundColor: AppColors.primaryColor,
           child: const Icon(
             Icons.add,

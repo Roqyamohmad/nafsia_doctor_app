@@ -55,7 +55,7 @@ Future<SupportGroupDataEntity?> showSupportGroupsView(BuildContext context) {
                 verticalSpace(12),
                 CustomTextFormField(
                   controller: priceController,
-                  labelText: "سعر الجلسة",
+                  labelText: "سعر الجلسه",
                   textInputType: TextInputType.number,
                 ),
               ],

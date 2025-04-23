@@ -11,24 +11,27 @@ class AppointmentsChatsList extends StatelessWidget {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              children: [
-                // Chat icon
-                const Icon(Icons.chat_bubble, color: AppColors.primaryColor),
-
-                const SizedBox(width: 12),
-
-                // Info
-                Expanded(
-                  child: Column(
+          return Directionality(
+            textDirection: TextDirection.rtl,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 22,
+                    backgroundImage: AssetImage(
+                      Assets.assetsImagesProfileTestImage,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
                         'مريم محمد',
-                        style: TextStyles.bold16
-                            .copyWith(color: AppColors.primaryColor),
+                        style: TextStyles.bold16.copyWith(
+                          color: AppColors.primaryColor,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       const Text(
@@ -37,17 +40,13 @@ class AppointmentsChatsList extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
-
-                const SizedBox(width: 12),
-
-                // Profile image
-                const CircleAvatar(
-                    radius: 22,
-                    backgroundImage: AssetImage(
-                      Assets.assetsImagesProfileTestImage,
-                    )),
-              ],
+                  const Spacer(),
+                  const Icon(
+                    Icons.chat_bubble,
+                    color: AppColors.primaryColor,
+                  ),
+                ],
+              ),
             ),
           );
         },
