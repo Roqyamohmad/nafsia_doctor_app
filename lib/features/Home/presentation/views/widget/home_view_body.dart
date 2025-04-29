@@ -15,8 +15,8 @@ class HomeViewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: SizedBox(
-        width: 40,
-        height: 40,
+        width: 60,
+        height: 60,
         child: FloatingActionButton(
           onPressed: () {
             Navigator.push(
@@ -27,7 +27,7 @@ class HomeViewBody extends StatelessWidget {
           backgroundColor: AppColors.primaryColor,
           child: const Icon(
             Icons.add,
-            size: 30,
+            size: 50,
             color: Colors.white,
           ),
         ),

@@ -3,118 +3,136 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class ImageField extends StatefulWidget {
-  const ImageField({super.key, required this.onFileChanged});
-  final ValueChanged<File?> onFileChanged;
+class ImageFormField extends FormField<File?> {
+  ImageFormField({
+    super.key,
+    required FormFieldSetter<File?> onSaved,
+    required FormFieldValidator<File?> validator,
+    File? initialValue,
+  }) : super(
+          initialValue: initialValue,
+          onSaved: onSaved,
+          validator: validator,
+          builder: (field) {
+            final state = field as _ImageFormFieldState;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                GestureDetector(
+                  onTap: state._showImagePickerDialog,
+                  child: Stack(
+                    children: [
+                      Container(
+                        height: 180,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                              color: field.hasError ? Colors.red : Colors.grey),
+                        ),
+                        child: state.fileImage != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: Image.file(
+                                  state.fileImage!,
+                                  width: double.infinity,
+                                  height: 180,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : const Center(
+                                child: Icon(
+                                  Icons.image_outlined,
+                                  size: 80,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                      ),
+                      if (state.fileImage != null)
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: IconButton(
+                            onPressed: () {
+                              state._removeImage();
+                            },
+                            icon: const Icon(Icons.close, color: Colors.red),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                if (field.hasError)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      field.errorText!,
+                      style: TextStyle(color: Colors.red, fontSize: 12),
+                    ),
+                  ),
+              ],
+            );
+          },
+        );
 
   @override
-  State<ImageField> createState() => _ImageFieldState();
+  FormFieldState<File?> createState() => _ImageFormFieldState();
 }
 
-class _ImageFieldState extends State<ImageField> {
+class _ImageFormFieldState extends FormFieldState<File?> {
   bool isLoading = false;
   File? fileImage;
 
-  /// Function to pick an image
+  @override
+  void initState() {
+    super.initState();
+    fileImage = widget.initialValue;
+  }
+
   Future<void> _pickImage(ImageSource source) async {
     setState(() => isLoading = true);
-
     try {
       final picker = ImagePicker();
       final XFile? image = await picker.pickImage(source: source);
-
       if (image != null) {
-        setState(() {
-          fileImage = File(image.path);
-          widget.onFileChanged(fileImage);
-        });
+        fileImage = File(image.path);
+        didChange(fileImage);
       }
     } catch (e) {
       debugPrint('Error picking image: $e');
     }
-
     setState(() => isLoading = false);
   }
 
-  /// Show image picker options
   void _showImagePickerDialog() {
     showModalBottomSheet(
       context: context,
-      builder: (_) {
-        return Wrap(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.camera),
-              title: const Text('التقط صورة بالكاميرا'),
-              onTap: () {
-                Navigator.pop(context);
-                _pickImage(ImageSource.camera);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text('اختر من المعرض'),
-              onTap: () {
-                Navigator.pop(context);
-                _pickImage(ImageSource.gallery);
-              },
-            ),
-          ],
-        );
-      },
+      builder: (_) => Wrap(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.camera),
+            title: const Text('التقط صورة بالكاميرا'),
+            onTap: () {
+              Navigator.pop(context);
+              _pickImage(ImageSource.camera);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.photo_library),
+            title: const Text('اختر من المعرض'),
+            onTap: () {
+              Navigator.pop(context);
+              _pickImage(ImageSource.gallery);
+            },
+          ),
+        ],
+      ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Skeletonizer(
-      enabled: isLoading,
-      child: GestureDetector(
-        onTap: _showImagePickerDialog,
-        child: Stack(
-          children: [
-            Container(
-              width: double.infinity,
-              height: 180,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey),
-              ),
-              child: fileImage != null
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Image.file(
-                        fileImage!,
-                        width: double.infinity,
-                        height: 180,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : const Center(
-                      child: Icon(
-                        Icons.image_outlined,
-                        size: 80,
-                        color: Colors.grey,
-                      ),
-                    ),
-            ),
-            if (fileImage != null)
-              Positioned(
-                top: 8,
-                right: 8,
-                child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      fileImage = null;
-                      widget.onFileChanged(null);
-                    });
-                  },
-                  icon: const Icon(Icons.close, color: Colors.red),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
+  void _removeImage() {
+    setState(() {
+      fileImage = null;
+      didChange(null);
+    });
   }
 }

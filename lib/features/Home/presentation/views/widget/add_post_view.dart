@@ -61,6 +61,7 @@ class _AddPostViewState extends State<AddPostView> {
                 ],
               ),
               const SizedBox(height: 16),
+              /*
               ImageField(
                 onFileChanged: (file) {
                   setState(() {
@@ -68,6 +69,7 @@ class _AddPostViewState extends State<AddPostView> {
                   });
                 },
               ),
+              */
               const SizedBox(height: 30),
               ElevatedButton.icon(
                 onPressed: () {

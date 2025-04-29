@@ -1,10 +1,18 @@
-import 'package:dartz/dartz.dart' show Either;
-import 'package:nafsia_app/features/auth/domain/entites/user_entity.dart'
-    show UserEntity;
-
+import 'package:dartz/dartz.dart';
+import 'package:nafsia_app/features/auth/data/models/user_model.dart';
 import '../../../../core/errors/failures.dart';
 
-abstract class AuthRebo {
-  Future<Either<Failure, UserEntity>> createUserWithEmailAndPassword(
-      String email, String password, String name);
+abstract class AuthRepo {
+  Future<Either<Failure, UserModel>> createUserWithEmailAndPassword({
+    required String email,
+    required String password,
+    required String name,
+    required int age,
+    required String gender,
+    required String phoneNumber,
+    required String specialty,
+    //required String medicalLicenseNumber,
+   // required String licensingAuthority,
+    required String? imagePath,
+  });
 }

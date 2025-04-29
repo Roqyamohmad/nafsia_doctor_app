@@ -1,20 +1,20 @@
-import 'dart:io' show File;
-
+import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:nafsia_app/core/utils/app_text_styles.dart' show TextStyles;
-import 'package:nafsia_app/core/utils/spacing.dart' show verticalSpace;
-import 'package:nafsia_app/core/widgets/custom_button.dart' show CustomButton;
-import 'package:nafsia_app/core/widgets/custom_text_field.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nafsia_app/core/helper_functions/app_regex.dart';
+import 'package:nafsia_app/core/helper_functions/build_error_bar.dart'
+    show showBar;
+import 'package:nafsia_app/core/utils/app_text_styles.dart';
+import 'package:nafsia_app/core/utils/spacing.dart';
+import 'package:nafsia_app/core/widgets/custom_button.dart';
 import 'package:nafsia_app/core/widgets/password_field.dart';
-import 'package:nafsia_app/features/auth/presentation/views/widget/already_have_account.dart';
-import 'package:nafsia_app/features/auth/presentation/views/widget/index.dart'
-    show showDoctorSessionDialog;
-import 'package:nafsia_app/features/auth/presentation/views/widget/login_view_body_logo_and_title.dart';
-import 'package:nafsia_app/features/auth/presentation/views/widget/terms_and_conditions.dart'
-    show TermsAndConditions;
-import '../../../../../core/helper_functions/app_regex.dart';
+import 'package:nafsia_app/features/auth/presentation/cubits/signup_cubits/signup_cubit.dart';
+import 'package:nafsia_app/features/auth/presentation/views/widget/index.dart';
+
 import '../../../../../core/widgets/custom_drop_down_form_field.dart';
-import 'image_field.dart';
+import '../../../../../core/widgets/custom_text_field.dart';
 
 class SignupViewBody extends StatefulWidget {
   const SignupViewBody({super.key});
@@ -24,9 +24,20 @@ class SignupViewBody extends StatefulWidget {
 }
 
 class _SignupViewBodyState extends State<SignupViewBody> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   String? selectedGender;
-  late bool isTermsAccepted = false;
   File? image;
+  late bool isTermsAccepted = false;
+
+  late String name,
+      email,
+      password,
+      phoneNumber,
+      specialty,
+      medicalLicenseNumber,
+      licensingAuthority;
+  late int age;
 
   @override
   Widget build(BuildContext context) {
@@ -34,109 +45,148 @@ class _SignupViewBodyState extends State<SignupViewBody> {
       padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16),
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            const LoginViewBodyLogoAndTitle(
-              title: 'انضم إلينا',
-            ),
-            verticalSpace(20),
-            const CustomTextFormField(
-              textInputType: TextInputType.text,
-              labelText: 'الاسم الاول',
-            ),
-            verticalSpace(16),
-            const CustomTextFormField(
-              textInputType: TextInputType.text,
-              labelText: 'الاسم الثاني',
-            ),
-            verticalSpace(16),
-            const CustomTextFormField(
-                textInputType: TextInputType.number, labelText: 'العمر'),
-            verticalSpace(16),
-            CustomDropdownFormField(
-              hintText: 'الجنس',
-              needsValidation: true,
-              items: const ['ذكر', 'أنثى'],
-              value: selectedGender, // Pass the selected value
-              onChanged: (newValue) {
-                setState(() {
-                  selectedGender = newValue; // Update the value
-                });
-              },
-            ),
-            verticalSpace(16),
-            CustomTextFormField(
-              textInputType: TextInputType.phone,
-              labelText: 'رقم الهاتف',
-              validator: (value) {
-                if (value == null ||
-                    value.isEmpty ||
-                    !AppRegex.isPhoneNumberValid(value)) {
-                  return 'برجاء ادخال رقم هاتف صالح';
-                }
-                return null;
-              },
-            ),
-            verticalSpace(16),
-            const CustomTextFormField(
-              textInputType: TextInputType.text,
-              labelText: 'التخصص الطبي',
-            ),
-            verticalSpace(16),
-            const CustomTextFormField(
-              textInputType: TextInputType.number,
-              labelText: 'رقم الترخيص الطبي',
-            ),
-            verticalSpace(16),
-            const CustomTextFormField(
-              textInputType: TextInputType.text,
-              labelText: 'الجهة المانحه للترخيص',
-            ),
-            verticalSpace(16),
-            const CustomTextFormField(
-              textInputType: TextInputType.emailAddress,
-              labelText: 'البريد الإلكتروني',
-            ),
-            verticalSpace(16),
-            const PasswordField(),
-            verticalSpace(16),
-            CustomButton(
-              text: 'تحديد مواعيد الجلسات',
-              onPressed: () {
-                showDoctorSessionDialog(context);
-              },
-            ),
-            verticalSpace(16),
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'صورة الرخصة الطبية',
-                    style: TextStyles.bold16.copyWith(color: Colors.blueGrey),
-                  ),
-                  const SizedBox(height: 8),
-                  ImageField(
-                    onFileChanged: (image) {
-                      this.image = image;
-                    },
-                  ),
-                ],
+        child: Form(
+          key: formKey,
+          autovalidateMode: autovalidateMode,
+          child: Column(
+            children: [
+              const LoginViewBodyLogoAndTitle(title: 'انضم إلينا'),
+              verticalSpace(20),
+              CustomTextFormField(
+                textInputType: TextInputType.text,
+                labelText: 'الاسم بالكامل',
+                onSaved: (value) => name = value!,
               ),
-            ),
-            TermsAndConditions(
-              onChanged: (value) {
-                isTermsAccepted = value;
-              },
-            ),
-            verticalSpace(16),
-            const CustomButton(
-              text: 'إنشاء حساب',
-            ),
-            verticalSpace(16),
-            const AlreadyHaveAccount(),
-          ],
+              verticalSpace(16),
+              CustomTextFormField(
+                textInputType: TextInputType.number,
+                labelText: 'العمر',
+                onSaved: (value) => age = int.parse(value!),
+              ),
+              verticalSpace(16),
+              CustomDropdownFormField(
+                hintText: 'الجنس',
+                needsValidation: true,
+                items: const ['ذكر', 'أنثى'],
+                value: selectedGender,
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedGender = newValue!;
+                  });
+                },
+              ),
+              verticalSpace(16),
+              CustomTextFormField(
+                textInputType: TextInputType.phone,
+                labelText: 'رقم الهاتف',
+                onSaved: (value) => phoneNumber = value!,
+                validator: (value) {
+                  if (value == null ||
+                      value.isEmpty ||
+                      !AppRegex.isPhoneNumberValid(value)) {
+                    return 'برجاء ادخال رقم هاتف صالح';
+                  }
+                  return null;
+                },
+              ),
+              verticalSpace(16),
+              CustomTextFormField(
+                textInputType: TextInputType.text,
+                labelText: 'التخصص الطبي',
+                onSaved: (value) => specialty = value!,
+              ),
+              verticalSpace(16),
+              CustomTextFormField(
+                textInputType: TextInputType.number,
+                labelText: 'رقم الترخيص الطبي',
+                onSaved: (value) => medicalLicenseNumber = value!,
+              ),
+              verticalSpace(16),
+              CustomTextFormField(
+                textInputType: TextInputType.text,
+                labelText: 'الجهة المانحه للترخيص',
+                onSaved: (value) => licensingAuthority = value!,
+              ),
+              verticalSpace(16),
+              CustomTextFormField(
+                textInputType: TextInputType.emailAddress,
+                labelText: 'البريد الإلكتروني',
+                onSaved: (value) => email = value!,
+              ),
+              verticalSpace(16),
+              PasswordField(
+                onSaved: (value) => password = value!,
+              ),
+              verticalSpace(16),
+              CustomButton(
+                text: 'تحديد مواعيد الجلسات',
+                onPressed: () {
+                  showDoctorSessionDialog(context);
+                },
+              ),
+              verticalSpace(16),
+              Directionality(
+                textDirection: TextDirection.rtl,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'صورة الرخصة الطبية',
+                      style: TextStyles.bold16.copyWith(color: Colors.blueGrey),
+                    ),
+                    const SizedBox(height: 8),
+                    ImageFormField(
+                      initialValue: image,
+                      validator: (file) {
+                        if (file == null) return 'يرجى رفع الصورة';
+                        return null;
+                      },
+                      onSaved: (file) {
+                        image = file;
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              TermsAndConditions(
+                onChanged: (value) {
+                  isTermsAccepted = value;
+                },
+              ),
+              verticalSpace(16),
+              CustomButton(
+                text: 'إنشاء حساب',
+                onPressed: () {
+                  if (isTermsAccepted && selectedGender != null) {
+                    formKey.currentState!.save();
+                    if (isTermsAccepted) {
+                      context
+                          .read<SignupCubit>()
+                          .createUserWithEmailAndPassword(
+                            email: email,
+                            password: password,
+                            name: name,
+                            age: age,
+                            gender: selectedGender!,
+                            phoneNumber: phoneNumber,
+                            specialty: specialty,
+                            imagePath: image?.path,
+                          );
+                    } else {
+                      showBar(
+                          context, 'برجاء الموافقة على الشروط واختيار الجنس');
+                    }
+                  } else {
+                    setState(() {
+                      autovalidateMode = AutovalidateMode.always;
+                    });
+                  }
+                },
+              ),
+              verticalSpace(16),
+              const AlreadyHaveAccount(),
+            ],
+          ),
         ),
       ),
     );

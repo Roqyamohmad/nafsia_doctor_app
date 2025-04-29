@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
-
 import '../utils/app_text_styles.dart';
 
 class PasswordField extends StatefulWidget {
   const PasswordField({
     super.key,
     this.onSaved,
+    this.needsValidation = true,
+    this.validator,
   });
 
   final void Function(String?)? onSaved;
+  final bool needsValidation;
+
+  /// Optional custom validator; if null, we'll use the built-in pattern check.
+  final String? Function(String?)? validator;
 
   @override
   State<PasswordField> createState() => _PasswordFieldState();
@@ -16,6 +21,20 @@ class PasswordField extends StatefulWidget {
 
 class _PasswordFieldState extends State<PasswordField> {
   bool obscureText = true;
+
+  // نمط التحقّق: رقم واحد، رمز خاص واحد، حرف واحد على الأقل، وطول 8+ أحرف
+  final _pattern = r'^(?=.*[0-9])(?=.*[!@#\$&*~])(?=.*[A-Za-z]).{8,}$';
+
+  String? _defaultValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'هذا الحقل مطلوب';
+    }
+    if (!RegExp(_pattern).hasMatch(value)) {
+      return 'يجب أن تحتوي كلمة المرور 8+ أحرف، رقم واحد، ورمز خاص واحد';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -23,23 +42,19 @@ class _PasswordFieldState extends State<PasswordField> {
       child: TextFormField(
         obscureText: obscureText,
         onSaved: widget.onSaved,
-        //hintText: 'كلمة المرور',
+        validator: widget.needsValidation
+            ? (widget.validator ?? _defaultValidator)
+            : null,
         keyboardType: TextInputType.visiblePassword,
         decoration: InputDecoration(
           suffixIcon: GestureDetector(
             onTap: () {
-              obscureText = !obscureText;
-              setState(() {});
+              setState(() => obscureText = !obscureText);
             },
-            child: obscureText
-                ? const Icon(
-                    Icons.remove_red_eye,
-                    color: Color(0xffC9CECF),
-                  )
-                : const Icon(
-                    Icons.visibility_off,
-                    color: Color(0xffC9CECF),
-                  ),
+            child: Icon(
+              obscureText ? Icons.remove_red_eye : Icons.visibility_off,
+              color: const Color(0xffC9CECF),
+            ),
           ),
           label: RichText(
             text: TextSpan(
@@ -49,8 +64,9 @@ class _PasswordFieldState extends State<PasswordField> {
                 TextSpan(
                   text: ' *',
                   style: TextStyle(
-                      color: Color.fromARGB(255, 116, 127, 133),
-                      fontWeight: FontWeight.bold),
+                    color: Color.fromARGB(255, 116, 127, 133),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
