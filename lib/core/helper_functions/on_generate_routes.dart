@@ -4,11 +4,13 @@ import 'package:nafsia_app/features/Home/presentation/views/home_view.dart'
 
 import 'package:nafsia_app/features/Home/presentation/views/main_view.dart'
     show MainView;
-import 'package:nafsia_app/features/auth/presentation/views/reset_password_view.dart';
+import 'package:nafsia_app/features/auth/presentation/views/forget_password_view.dart';
 import 'package:nafsia_app/features/auth/presentation/views/signin_view.dart'
     show SigninView;
 import 'package:nafsia_app/features/auth/presentation/views/signup_view.dart';
 
+import '../../features/auth/presentation/views/Verify_otp_view.dart';
+import '../../features/auth/presentation/views/reset_password_view.dart';
 import '../../features/splash/presentation/views/splash_view.dart';
 
 Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -19,12 +21,23 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => const SigninView());
     case SignupView.routeName:
       return MaterialPageRoute(builder: (context) => const SignupView());
-    case ResetPasswordView.routeName:
-      return MaterialPageRoute(builder: (context) => const ResetPasswordView());
     case MainView.routeName:
       return MaterialPageRoute(builder: (context) => const MainView());
     case HomeView.route:
       return MaterialPageRoute(builder: (context) => const HomeView());
+    case ForgetPasswordView.route:
+      return MaterialPageRoute(
+          builder: (context) => const ForgetPasswordView());
+    case VerifyOtpView.route:
+      final email = settings.arguments as String;
+      return MaterialPageRoute(
+          builder: (context) => VerifyOtpView(email: email));
+    case ResetPasswordView.routeName:
+      final opt = settings.arguments as String;
+      return MaterialPageRoute(
+          builder: (context) => ResetPasswordView(
+                otp: opt,
+              ));
     default:
       return MaterialPageRoute(builder: (context) => const Scaffold());
   }

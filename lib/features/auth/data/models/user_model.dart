@@ -1,113 +1,97 @@
-// To parse this JSON data, do
-//
-//     final userModel = userModelFromJson(jsonString);
+class LoginResponseModel {
+  final bool success;
+  final String message;
+  final UserModel data;
 
-import 'dart:convert';
+  LoginResponseModel({
+    required this.success,
+    required this.message,
+    required this.data,
+  });
 
-UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
-
-String userModelToJson(UserModel data) => json.encode(data.toJson());
+  factory LoginResponseModel.fromJson(Map<String, dynamic> json) {
+    return LoginResponseModel(
+      success: json['success'],
+      message: json['message'],
+      data: UserModel.fromJson(json['data']),
+    );
+  }
+}
 
 class UserModel {
-    bool success;
-    String message;
-    Data data;
+  final UserDataModel user;
+  final String token;
 
-    UserModel({
-        required this.success,
-        required this.message,
-        required this.data,
-    });
+  UserModel({
+    required this.user,
+    required this.token,
+  });
 
-    factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        success: json["success"],
-        message: json["message"],
-        data: Data.fromJson(json["data"]),
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      user: UserDataModel.fromJson(json['user']),
+      token: json['token'],
     );
+  }
 
-    Map<String, dynamic> toJson() => {
-        "success": success,
-        "message": message,
-        "data": data.toJson(),
+  Map<String, dynamic> toJson() {
+    return {
+      'user': user.toJson(),
+      'token': token,
     };
+  }
 }
 
-class Data {
-    User user;
+class UserDataModel {
+  final String name;
+  final String email;
+  final String phone;
+  final String gender;
+  final int age;
+  final String role;
+  bool? isVerified;
+  DateTime? createdAt;
+  DateTime? updatedAt;
 
-    Data({
-        required this.user,
-    });
+  UserDataModel({
+    required this.name,
+    required this.email,
+    required this.gender,
+    required this.age,
+    required this.phone,
+    required this.role,
+    this.isVerified,
+    this.createdAt,
+    this.updatedAt,
+  });
 
-    factory Data.fromJson(Map<String, dynamic> json) => Data(
-        user: User.fromJson(json["user"]),
+  factory UserDataModel.fromJson(Map<String, dynamic> json) {
+    return UserDataModel(
+      name: json['name'],
+      email: json['email'],
+      gender: json['gender'],
+      age: json['age'],
+      phone: json['phone'],
+      role: json['role'],
+      isVerified: true,
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt:
+          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
     );
+  }
 
-    Map<String, dynamic> toJson() => {
-        "user": user.toJson(),
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'email': email,
+      'gender': gender,
+      'age': age,
+      'phone': phone,
+      'role': role,
+      'isVerified': isVerified,
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
     };
-}
-
-class User {
-    String id;
-    String name;
-    String email;
-    String password;
-    String phone;
-    String role;
-    int age;
-    String gender;
-    bool isVerified;
-    DateTime createdAt;
-    DateTime updatedAt;
-    dynamic doctorData;
-    String userId;
-
-    User({
-        required this.id,
-        required this.name,
-        required this.email,
-        required this.password,
-        required this.phone,
-        required this.role,
-        required this.age,
-        required this.gender,
-        required this.isVerified,
-        required this.createdAt,
-        required this.updatedAt,
-        required this.doctorData,
-        required this.userId,
-    });
-
-    factory User.fromJson(Map<String, dynamic> json) => User(
-        id: json["_id"],
-        name: json["name"],
-        email: json["email"],
-        password: json["password"],
-        phone: json["phone"],
-        role: json["role"],
-        age: json["age"],
-        gender: json["gender"],
-        isVerified: json["isVerified"],
-        createdAt: DateTime.parse(json["createdAt"]),
-        updatedAt: DateTime.parse(json["updatedAt"]),
-        doctorData: json["doctorData"],
-        userId: json["id"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "_id": id,
-        "name": name,
-        "email": email,
-        "password": password,
-        "phone": phone,
-        "role": role,
-        "age": age,
-        "gender": gender,
-        "isVerified": isVerified,
-        "createdAt": createdAt.toIso8601String(),
-        "updatedAt": updatedAt.toIso8601String(),
-        "doctorData": doctorData,
-        "id": userId,
-    };
+  }
 }

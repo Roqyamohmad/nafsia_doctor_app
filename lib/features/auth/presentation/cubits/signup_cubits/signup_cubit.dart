@@ -31,19 +31,13 @@ class SignupCubit extends Cubit<SignupState> {
         imagePath: imagePath,
       );
 
-      result.fold(
-        (failure) {
-          emit(SignupFailure(message: failure.message));
-          print('Signup failed: ${failure.message}');
-        },
-        (userModel) {
-          emit(SignupSuccess(message: userModel.message));
-          print('Signup success: ${userModel.message}');
-        },
-      );
+      result.fold((failure) {
+        emit(SignupFailure(message: failure.message));
+      }, (userModel) {
+        emit(SignupSuccess(message: 'تم إنشاء الحساب بنجاح'));
+      });
     } catch (e) {
       emit(SignupFailure(message: e.toString()));
-      print('Unexpected error during signup: $e');
     }
   }
 }

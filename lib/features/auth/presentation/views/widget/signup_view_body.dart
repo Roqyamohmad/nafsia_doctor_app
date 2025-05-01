@@ -173,8 +173,7 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                             imagePath: image?.path,
                           );
                     } else {
-                      showBar(
-                          context, 'برجاء الموافقة على الشروط واختيار الجنس');
+                      showBar(context, 'برجاء الموافقة على الشروط ');
                     }
                   } else {
                     setState(() {

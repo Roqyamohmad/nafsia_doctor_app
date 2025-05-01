@@ -7,6 +7,7 @@ class CustomTextFormField extends StatelessWidget {
     required this.labelText,
     required this.textInputType,
     this.suffixIcon,
+    this.onChanged,
     this.needsValidation = true,
     this.onSaved,
     this.validator,
@@ -14,6 +15,7 @@ class CustomTextFormField extends StatelessWidget {
     this.maxLines,
     this.minLines,
     this.showAsterisk = true,
+    this.textAlign = TextAlign.right,
   });
 
   final String labelText;
@@ -26,6 +28,8 @@ class CustomTextFormField extends StatelessWidget {
   final int? maxLines;
   final int? minLines;
   final bool showAsterisk;
+  final TextAlign textAlign;
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +40,7 @@ class CustomTextFormField extends StatelessWidget {
         maxLines: maxLines,
         controller: controller,
         onSaved: onSaved,
+        onChanged: onChanged,
         validator: needsValidation
             ? validator ??
                 (value) {
@@ -57,7 +62,7 @@ class CustomTextFormField extends StatelessWidget {
           enabledBorder: buildBorder(),
           focusedBorder: buildBorder(),
         ),
-        textAlign: TextAlign.right,
+        textAlign: textAlign,
       ),
     );
   }

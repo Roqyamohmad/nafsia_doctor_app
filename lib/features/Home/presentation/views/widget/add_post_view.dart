@@ -5,7 +5,7 @@ import 'package:nafsia_app/core/utils/app_colors.dart';
 import 'package:nafsia_app/core/widgets/custom_text_field.dart';
 import 'package:nafsia_app/features/Home/presentation/views/widget/custom_main_view_app_bar.dart';
 
-import '../../../../auth/presentation/views/widget/image_field.dart';
+//import '../../../../auth/presentation/views/widget/image_field.dart';
 
 class AddPostView extends StatefulWidget {
   const AddPostView({super.key});

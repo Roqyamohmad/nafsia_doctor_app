@@ -1,12 +1,12 @@
 export 'already_have_account.dart';
 export 'custom_check_box.dart';
 export 'dont_have_account.dart';
-export 'forget_password.dart';
+export 'forget_password_view_body.dart';
 export 'image_field.dart';
 export 'login_view_body_logo_and_title.dart';
 export 'or_divider.dart';
 export 'resent_code.dart';
-export 'reset_password_code_body.dart';
+export 'verify_otp_view_body.dart.dart';
 export 'session_day_selector.dart';
 export 'session_time_selector.dart';
 export 'show_doctor_session_dialog.dart';
