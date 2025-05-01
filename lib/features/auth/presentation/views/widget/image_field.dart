@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_import, use_super_parameters
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -66,7 +68,7 @@ class ImageFormField extends FormField<File?> {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
                       field.errorText!,
-                      style: TextStyle(color: Colors.red, fontSize: 12),
+                      style: const TextStyle(color: Colors.red, fontSize: 12),
                     ),
                   ),
               ],

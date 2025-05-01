@@ -1,3 +1,4 @@
+// ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:nafsia_app/features/auth/domain/repos/auth_repo.dart';
 import 'package:nafsia_app/features/auth/presentation/cubits/signup_cubits/signup_state.dart';

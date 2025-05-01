@@ -1,7 +1,5 @@
 import 'dart:io';
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nafsia_app/core/helper_functions/app_regex.dart';
 import 'package:nafsia_app/core/helper_functions/build_error_bar.dart'
