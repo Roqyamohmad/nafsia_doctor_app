@@ -1,8 +1,7 @@
+import 'package:nafsia_app/features/Home/data/model/doctor_data_model.dart';
+import 'package:nafsia_app/features/Home/data/model/image_data_model.dart';
 import 'package:nafsia_app/features/Home/data/model/reactions_data_model.dart';
 import 'package:nafsia_app/features/Home/data/model/tags_data_model.dart';
-
-import 'doctor_data_model.dart';
-import 'image_data_model.dart';
 
 class PostModel {
   final String id;
@@ -27,25 +26,33 @@ class PostModel {
     required this.updatedAt,
   });
 
-  factory PostModel.fromJson(Map<dynamic, dynamic> json) {
+  factory PostModel.fromJson(Map<String, dynamic> json) {
     return PostModel(
-      id: json['_id'],
-      title: json['title'],
-      content: json['content'],
-      images: (json['images'] as List)
-          .map((img) => ImageDataModel.fromJson(img))
-          .toList(),
-      doctor: DoctorDataModel.fromJson(json['doctorData']),
-      tags: (json['tagsData'] as List)
-          .map((tag) => TagDataModel.fromJson(tag))
-          .toList(),
-      reactions: (json['reactionsData'] as List)
-          .map((react) => ReactionDataModel.fromJson(react))
-          .toList(),
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      id: json['_id']?.toString() ?? '',
+      title: json['title']?.toString() ?? '',
+      content: json['content']?.toString() ?? '',
+      images: (json['images'] as List<dynamic>?)
+              ?.map((img) => ImageDataModel.fromJson(img))
+              .toList() ??
+          [],
+      doctor: DoctorDataModel.fromJson(json['doctorData'] ?? {}),
+      tags: (json['tagsData'] as List<dynamic>?)
+              ?.map((tag) => TagDataModel.fromJson(tag))
+              .toList() ??
+          [],
+      reactions: (json['reactionsData'] as List<dynamic>?)
+              ?.map((react) => ReactionDataModel.fromJson(react))
+              .toList() ??
+          [],
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'].toString()) ?? DateTime.now()
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.tryParse(json['updatedAt'].toString()) ?? DateTime.now()
+          : DateTime.now(),
     );
   }
+
   PostModel copyWith({
     String? id,
     String? title,

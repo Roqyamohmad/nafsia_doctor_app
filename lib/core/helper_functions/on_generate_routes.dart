@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nafsia_app/features/Home/presentation/views/home_view.dart'
-    show HomeView;
 
 import 'package:nafsia_app/features/Home/presentation/views/main_view.dart'
     show MainView;
@@ -23,8 +21,6 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => const SignupView());
     case MainView.routeName:
       return MaterialPageRoute(builder: (context) => const MainView());
-    case HomeView.route:
-      return MaterialPageRoute(builder: (context) => const HomeView());
     case ForgetPasswordView.route:
       return MaterialPageRoute(
           builder: (context) => const ForgetPasswordView());

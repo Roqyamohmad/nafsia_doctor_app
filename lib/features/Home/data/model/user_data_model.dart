@@ -9,12 +9,18 @@ class UserDataModel {
     required this.avatar,
   });
 
-  factory UserDataModel.fromJson(Map<dynamic, dynamic> json) {
-    final avatarValue = json['avatar'];
+  /// ✅ Factory ثابتة عشان تستخدمها لو عايز نسخة فاضية.
+  static var empty = UserDataModel(id: '', name: '', avatar: '');
+
+  factory UserDataModel.fromJson(Map<dynamic, dynamic>? json) {
+    if (json == null) {
+      return UserDataModel.empty;
+    }
+
     return UserDataModel(
-      id: json['_id'],
-      name: json['name'],
-      avatar: avatarValue is String ? avatarValue : '',
+      id: json['_id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      avatar: json['avatar'] is String ? json['avatar'] : '',
     );
   }
 

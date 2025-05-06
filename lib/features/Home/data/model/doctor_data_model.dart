@@ -11,11 +11,11 @@ class DoctorDataModel {
 
   factory DoctorDataModel.fromJson(Map<String, dynamic> json) {
     return DoctorDataModel(
-      id: json['_id'],
-      name: json['name'],
+      id: json['_id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
       avatarUrl: json['avatar'] is Map
-          ? json['avatar']['secure_url'] ?? 'default.png'
-          : json['avatar'] ?? 'default.png',
+          ? (json['avatar']['secure_url']?.toString() ?? 'default.png')
+          : (json['avatar']?.toString() ?? 'default.png'),
     );
   }
 }

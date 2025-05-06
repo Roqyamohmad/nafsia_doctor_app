@@ -12,6 +12,7 @@ environment:
 
 # Dependencies
 dependencies:
+  cached_network_image: ^3.4.1
   cupertino_icons: ^1.0.8
   dartz: ^0.10.1
   dio: ^5.8.0+1
@@ -32,6 +33,7 @@ dependencies:
   pretty_dio_logger: ^1.4.0
   shared_preferences: ^2.5.3
   skeletonizer: ^1.4.3
+  timeago: ^3.7.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.3

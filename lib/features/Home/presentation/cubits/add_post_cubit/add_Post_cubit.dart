@@ -13,10 +13,12 @@ class AddPostCubit extends Cubit<AddPostState> {
 
   Future<void> addPost({
     required String content,
-    MultipartFile? image,
+    required MultipartFile image,
+    required String title,
   }) async {
     emit(AddPostLoading());
-    final result = await homeRepo.addPosts(content: content, image: image);
+    final result =
+        await homeRepo.addPosts(content: content, image: image, title: title);
 
     result.fold(
       (failure) {
@@ -24,6 +26,32 @@ class AddPostCubit extends Cubit<AddPostState> {
       },
       (post) {
         emit(AddPostSuccess(post));
+      },
+    );
+  }
+
+  Future<void> updatePost({
+    required String postId,
+    required String content,
+    required MultipartFile?
+        image, // نخليه nullable لو حبيت تخلي الصورة اختيارية وقت التعديل
+    required String title,
+  }) async {
+    emit(UpdatePostLoading());
+
+    final result = await homeRepo.updatePost(
+      postId: postId,
+      content: content,
+      image: image,
+      title: title,
+    );
+
+    result.fold(
+      (failure) {
+        emit(UpdatePostFailure(failure.message));
+      },
+      (post) {
+        emit(UpdatePostSuccess(post));
       },
     );
   }

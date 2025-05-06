@@ -1,4 +1,4 @@
-import 'package:nafsia_app/features/auth/data/models/user_model.dart';
+import 'package:nafsia_app/features/Home/data/model/user_data_model.dart';
 
 class ReactionDataModel {
   final String id;
@@ -13,8 +13,8 @@ class ReactionDataModel {
 
   factory ReactionDataModel.fromJson(Map<String, dynamic> json) {
     return ReactionDataModel(
-      id: json['_id'],
-      type: json['reactType'],
+      id: json['_id']?.toString() ?? '',
+      type: json['reactType']?.toString() ?? '',
       user: UserDataModel.fromJson(json['userData']),
     );
   }

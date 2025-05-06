@@ -11,5 +11,10 @@ class BackendEndpoint {
   static const String reactPost = 'react';
   static const String getPostReactions = 'react';
   static const String savePost = 'saved-posts';
-  //static const String updatePost = 'post/{id}';
+  static String deletePost(String postId) => 'post/$postId';
+  static String updatePost(String postId) => 'post/$postId';
+
+  static const String getUserData = 'user';
+  static const String updateUserProfile = 'user';
+  static const String changeUserPassword = 'user';
 }

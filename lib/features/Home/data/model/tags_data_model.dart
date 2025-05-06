@@ -7,10 +7,16 @@ class TagDataModel {
     required this.name,
   });
 
-  factory TagDataModel.fromJson(Map<String, dynamic> json) {
+  static var empty = TagDataModel(id: '', name: '');
+
+  factory TagDataModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return TagDataModel.empty;
+    }
+
     return TagDataModel(
-      id: json['_id'],
-      name: json['name'],
+      id: json['_id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
     );
   }
 

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:nafsia_app/core/utils/app_images.dart';
+import 'custom_cached_network_image.dart';
 
 class CustomPostImage extends StatelessWidget {
-  const CustomPostImage({
-    super.key,
-  });
+  final String imagePath;
+  const CustomPostImage({super.key, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.center,
-      child: Image.asset(
-        Assets.assetsImagesPostTestImage,
+      child: CustomCachedNetworkImageWidget(
+        imageUrl: imagePath,
+        borderRadius: 8,
         width: MediaQuery.sizeOf(context).width * 0.9,
         fit: BoxFit.fill,
         height: MediaQuery.sizeOf(context).height * 0.3,

@@ -1,15 +1,18 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nafsia_app/core/helper_functions/app_regex.dart';
 import 'package:nafsia_app/core/helper_functions/build_error_bar.dart'
     show showBar;
+import 'package:nafsia_app/core/helper_functions/detect_mime_type.dart';
 import 'package:nafsia_app/core/utils/app_text_styles.dart';
 import 'package:nafsia_app/core/utils/spacing.dart';
 import 'package:nafsia_app/core/widgets/custom_button.dart';
 import 'package:nafsia_app/core/widgets/password_field.dart';
 import 'package:nafsia_app/features/auth/presentation/cubits/signup_cubits/signup_cubit.dart';
 import 'package:nafsia_app/features/auth/presentation/views/widget/index.dart';
+import 'package:http_parser/http_parser.dart';
 
 import '../../../../../core/widgets/custom_drop_down_form_field.dart';
 import '../../../../../core/widgets/custom_text_field.dart';
@@ -25,7 +28,8 @@ class _SignupViewBodyState extends State<SignupViewBody> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   String? selectedGender;
-  File? image;
+  File? avatarImage;
+  File? licenseImage;
   late bool isTermsAccepted = false;
 
   late String name,
@@ -94,6 +98,7 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                 onSaved: (value) => specialty = value!,
               ),
               verticalSpace(16),
+              /*
               CustomTextFormField(
                 textInputType: TextInputType.number,
                 labelText: 'رقم الترخيص الطبي',
@@ -106,6 +111,7 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                 onSaved: (value) => licensingAuthority = value!,
               ),
               verticalSpace(16),
+              */
               CustomTextFormField(
                 textInputType: TextInputType.emailAddress,
                 labelText: 'البريد الإلكتروني',
@@ -123,6 +129,34 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                 },
               ),
               verticalSpace(16),
+              // صورة البروفايل
+              Directionality(
+                textDirection: TextDirection.rtl,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'صورة البروفايل',
+                      style: TextStyles.bold16.copyWith(color: Colors.blueGrey),
+                    ),
+                    const SizedBox(height: 8),
+                    ImageFormField(
+                      initialValue: avatarImage,
+                      validator: (file) {
+                        if (file == null) return 'يرجى رفع صورة البروفايل';
+                        return null;
+                      },
+                      onSaved: (file) {
+                        avatarImage = file;
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              verticalSpace(16),
+
+// صورة الرخصة الطبية
               Directionality(
                 textDirection: TextDirection.rtl,
                 child: Column(
@@ -134,18 +168,19 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                     ),
                     const SizedBox(height: 8),
                     ImageFormField(
-                      initialValue: image,
+                      initialValue: licenseImage,
                       validator: (file) {
-                        if (file == null) return 'يرجى رفع الصورة';
+                        if (file == null) return 'يرجى رفع صورة الترخيص';
                         return null;
                       },
                       onSaved: (file) {
-                        image = file;
+                        licenseImage = file;
                       },
                     ),
                   ],
                 ),
               ),
+
               TermsAndConditions(
                 onChanged: (value) {
                   isTermsAccepted = value;
@@ -154,10 +189,25 @@ class _SignupViewBodyState extends State<SignupViewBody> {
               verticalSpace(16),
               CustomButton(
                 text: 'إنشاء حساب',
-                onPressed: () {
+                onPressed: () async {
                   if (isTermsAccepted && selectedGender != null) {
                     formKey.currentState!.save();
-                    if (isTermsAccepted) {
+
+                    if (avatarImage != null && licenseImage != null) {
+                      final profileImage = await MultipartFile.fromFile(
+                        avatarImage!.path,
+                        filename: avatarImage!.path.split('/').last,
+                        contentType: MediaType(
+                            'image', detectMimeType(avatarImage!.path)),
+                      );
+
+                      final licenseFile = await MultipartFile.fromFile(
+                        licenseImage!.path,
+                        filename: licenseImage!.path.split('/').last,
+                        contentType: MediaType(
+                            'image', detectMimeType(licenseImage!.path)),
+                      );
+
                       context
                           .read<SignupCubit>()
                           .createUserWithEmailAndPassword(
@@ -168,12 +218,16 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                             gender: selectedGender!,
                             phoneNumber: phoneNumber,
                             specialty: specialty,
-                            imagePath: image?.path,
+                            profileImage: profileImage,
+                            licenseImage: licenseFile,
                           );
                     } else {
-                      showBar(context, 'برجاء الموافقة على الشروط ');
+                      showBar(context, 'برجاء رفع صور البروفايل والترخيص');
                     }
                   } else {
+                    if (!isTermsAccepted) {
+                      showBar(context, 'برجاء الموافقة على الشروط ');
+                    }
                     setState(() {
                       autovalidateMode = AutovalidateMode.always;
                     });
