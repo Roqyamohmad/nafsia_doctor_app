@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:nafsia_app/core/utils/app_colors.dart' show AppColors;
 import 'package:nafsia_app/core/utils/app_text_styles.dart' show TextStyles;
 import 'package:nafsia_app/features/Home/presentation/views/widget/notification_view.dart';
+import 'package:nafsia_app/features/auth/data/models/user_model.dart';
 
+// ignore: must_be_immutable
 class CustomHomeAppBar extends StatelessWidget {
+  final User? doctorData;
   const CustomHomeAppBar({
+    this.doctorData,
     super.key,
   });
 
@@ -13,8 +17,8 @@ class CustomHomeAppBar extends StatelessWidget {
     return Row(
       children: [
         Text(
-          ' اهلًا بك دكتور مريم  ^_^ ',
-          style: TextStyles.bold23.copyWith(color: AppColors.primaryColor),
+          'اهلًا بك دكتور ${doctorData!.name} ^_^',
+          style: TextStyles.bold19.copyWith(color: AppColors.primaryColor),
         ),
         const Spacer(),
         IconButton(

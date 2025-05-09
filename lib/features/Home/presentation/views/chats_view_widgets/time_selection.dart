@@ -5,50 +5,53 @@ import '../../../../../core/helper_functions/pick_time.dart';
 class TimeSelection extends StatelessWidget {
   final TimeOfDay selectedTime;
   final Function(TimeOfDay) onTimeSelected;
+  final String label;
 
   const TimeSelection({
     super.key,
     required this.selectedTime,
     required this.onTimeSelected,
+    required this.label,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.backGroundyColor,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            // ignore: deprecated_member_use
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        title: const Align(
-          alignment: Alignment.centerRight,
-          child: Text(
-            "وقت الجلسة",
-            textAlign: TextAlign.right,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+    return GestureDetector(
+      onTap: () {
+        pickTime(
+          context: context,
+          selectedTime: selectedTime,
+          onTimeSelected: onTimeSelected,
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        decoration: BoxDecoration(
+          color: AppColors.backGroundyColor,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey.shade300),
         ),
-        subtitle: Align(
-          alignment: Alignment.centerRight,
-          child: Text("${selectedTime.hour}:${selectedTime.minute}"),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              label,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              "${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}",
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.black87,
+              ),
+            ),
+            const Icon(Icons.access_time, size: 16, color: Colors.black54),
+          ],
         ),
-        leading: const Icon(Icons.access_time, color: Colors.black54),
-        onTap: () {
-          pickTime(
-            context: context,
-            selectedTime: selectedTime,
-            onTimeSelected: onTimeSelected,
-          );
-        },
       ),
     );
   }

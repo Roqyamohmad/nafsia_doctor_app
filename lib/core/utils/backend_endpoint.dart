@@ -5,6 +5,7 @@ class BackendEndpoint {
   static const String resetPassword = 'auth/reset-password';
   static const String signUp = 'auth/register';
   static const String logIn = 'auth/login';
+  static const String logout = 'auth/logout';
 
   static const String addPost = 'post';
   static const String getAllPosts = 'post';
@@ -17,4 +18,11 @@ class BackendEndpoint {
   static const String getUserData = 'user';
   static const String updateUserProfile = 'user';
   static const String changeUserPassword = 'user';
+
+  static const String addAppointment = 'appointment';
+  static String updateAppointment(String postId) => 'appointment/$postId';
+  static String deleteAppointment(String postId) => 'appointment/$postId';
+  static String getAppointments = 'appointment';
+
+  static String createCommunitySession = '/session/community-session';
 }

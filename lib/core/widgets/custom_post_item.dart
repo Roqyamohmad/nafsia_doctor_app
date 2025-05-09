@@ -64,51 +64,7 @@ class CustomPostItem extends StatelessWidget {
                       ),
                       IconButton(
                         onPressed: () async {
-                          //  final homeCubit = context.read<HomeCubit>();
-                          // Delete Post Action
-                          showDialog(
-                            context: context,
-                            builder: (dialogContext) =>
-                                BlocListener<HomeCubit, HomeState>(
-                              bloc: context.read<HomeCubit>(), // هنا السر 👈
-                              listener: (context, state) {
-                                if (state is DeletePostSuccessState) {
-                                  Navigator.pop(
-                                      dialogContext); // نستخدم dialogContext مش context الأصلي
-                                  ScaffoldMessenger.of(dialogContext)
-                                      .showSnackBar(
-                                    const SnackBar(
-                                        content: Text('تم حذف المنشور بنجاح')),
-                                  );
-                                } else if (state is DeletePostFailureState) {
-                                  ScaffoldMessenger.of(dialogContext)
-                                      .showSnackBar(
-                                    SnackBar(content: Text('فشل حذف المنشور')),
-                                  );
-                                }
-                              },
-                              child: AlertDialog(
-                                title: const Text('تأكيد الحذف'),
-                                content:
-                                    const Text('هل أنت متأكد من حذف المنشور؟'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(dialogContext),
-                                    child: const Text('إلغاء'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      context
-                                          .read<HomeCubit>()
-                                          .deletePost(postId: postModel.id);
-                                    },
-                                    child: const Text('حذف'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
+                          confirmdelete(context);
                         },
                         icon: const Icon(
                           Icons.delete,
@@ -138,6 +94,44 @@ class CustomPostItem extends StatelessWidget {
             /*
             CustomPostActions(postModel: postModel),
             */
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<dynamic> confirmdelete(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (dialogContext) => BlocListener<HomeCubit, HomeState>(
+        bloc: context.read<HomeCubit>(), // هنا السر 👈
+        listener: (context, state) {
+          if (state is DeletePostSuccessState) {
+            Navigator.pop(
+                dialogContext); // نستخدم dialogContext مش context الأصلي
+            ScaffoldMessenger.of(dialogContext).showSnackBar(
+              const SnackBar(content: Text('تم حذف المنشور بنجاح')),
+            );
+          } else if (state is DeletePostFailureState) {
+            ScaffoldMessenger.of(dialogContext).showSnackBar(
+              SnackBar(content: Text('فشل حذف المنشور')),
+            );
+          }
+        },
+        child: AlertDialog(
+          title: const Text('تأكيد الحذف'),
+          content: const Text('هل أنت متأكد من حذف المنشور؟'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('إلغاء'),
+            ),
+            TextButton(
+              onPressed: () {
+                context.read<HomeCubit>().deletePost(postId: postModel.id);
+              },
+              child: const Text('حذف'),
+            ),
           ],
         ),
       ),

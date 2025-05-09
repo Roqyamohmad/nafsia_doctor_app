@@ -4,8 +4,10 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:nafsia_app/core/errors/custom_exceptions.dart';
 import 'package:nafsia_app/core/errors/failures.dart';
+import 'package:nafsia_app/core/helper_functions/get_user_data.dart';
 import 'package:nafsia_app/core/services/api_consumer.dart' show ApiConsumer;
 import 'package:nafsia_app/core/utils/backend_endpoint.dart';
+import 'package:nafsia_app/features/auth/data/models/doctr_model.dart';
 import 'package:nafsia_app/features/auth/data/models/user_model.dart';
 import 'package:nafsia_app/features/auth/domain/repos/auth_repo.dart';
 
@@ -145,6 +147,104 @@ class AuthRepoImpl extends AuthRepo {
       return right(null);
     } on ServerException catch (e) {
       return left(ServerFailure(message: e.errorModel.errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> updateUserProfile({
+    String? specialization,
+    String? name,
+    String? phone,
+    int? age,
+  }) async {
+    try {
+      var token = getUserData().data?.token;
+      final response = await apiConsumer.patch(
+        BackendEndpoint.updateUserProfile,
+        data: {
+          'name': name,
+          'phone': phone,
+          'age': age,
+          'specialization': specialization,
+        },
+        isFromData: true,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      // 1. Get the existing user data from cache
+      final oldUserData = await CacheHelper.getData(key: kSaveUserDataKey);
+      if (oldUserData == null) {
+        return left(
+            ServerFailure(message: 'لم يتم العثور على بيانات المستخدم'));
+      }
+
+      final oldUserModel = UserModel.fromJson(jsonDecode(oldUserData));
+
+      final updatedJson = response['data'];
+
+      var updatedUser = oldUserModel.data?.user?.copyWith(
+        name: updatedJson['name'],
+        phone: updatedJson['phone'],
+        age: updatedJson['age'],
+        doctorData: updatedJson['doctorData'] != null
+            ? DoctorDataModel.fromJson(updatedJson['doctorData'])
+            : null,
+      );
+
+// 3. Save the updated user
+      await saveUserData(UserModel(
+          data: Data(user: updatedUser, token: oldUserModel.data?.token)));
+
+      return right(null);
+    } on ServerException catch (e) {
+      return left(ServerFailure(message: e.errorModel.errorMessage));
+    } catch (e) {
+      log(e.toString());
+      return left(ServerFailure(message: 'حدث خطأ أثناء تحديث البيانات'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> changeUserPassword(
+      {required String oldPassword, required String newPassword}) async {
+    try {
+      var token = getUserData().data?.token;
+      await apiConsumer.put(
+        BackendEndpoint.changeUserPassword,
+        data: {
+          'oldPassword': oldPassword,
+          'newPassword': newPassword,
+        },
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      return right(null);
+    } on ServerException catch (e) {
+      return left(ServerFailure(message: e.errorModel.errorMessage));
+    } catch (e) {
+      log(e.toString());
+      return left(ServerFailure(message: 'حدث خطاء ما، حاول مرة اخرى'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> logout() async {
+    try {
+      var token = getUserData().data?.token;
+      await apiConsumer.post(BackendEndpoint.logout, headers: {
+        'Authorization': 'Bearer $token',
+      });
+      await CacheHelper.removeData(key: kSaveUserDataKey);
+
+      return right(null);
+    } on ServerException catch (e) {
+      return left(ServerFailure(message: e.errorModel.errorMessage));
+    } catch (e) {
+      log(e.toString());
+      return left(ServerFailure(message: 'حدث خطاء ما، حاول مرة اخرى'));
     }
   }
 }

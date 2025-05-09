@@ -122,12 +122,14 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                 onSaved: (value) => password = value!,
               ),
               verticalSpace(16),
+              /*
               CustomButton(
                 text: 'تحديد مواعيد الجلسات',
                 onPressed: () {
                   showDoctorSessionDialog(context);
                 },
               ),
+              */
               verticalSpace(16),
               // صورة البروفايل
               Directionality(

@@ -30,16 +30,3 @@ class UpdatePostFailure extends AddPostState {
   final String error;
   UpdatePostFailure(this.error);
 }
-
-// لتعديل المنشور
-class UpdatePostLoadingState extends AddPostState {}
-
-class UpdatePostSuccessState extends AddPostState {
-  final PostModel updatedPost;
-  UpdatePostSuccessState(this.updatedPost);
-}
-
-class UpdatePostFailureState extends AddPostState {
-  final String message;
-  UpdatePostFailureState(this.message);
-}

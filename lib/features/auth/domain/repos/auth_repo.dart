@@ -32,4 +32,15 @@ abstract class AuthRepo {
     required String otp,
     required String newPassword,
   });
+  Future<Either<Failure, void>> updateUserProfile({
+    String? name,
+    String? phone,
+    String? specialization,
+    int? age,
+  });
+  Future<Either<Failure, void>> changeUserPassword({
+    required String oldPassword,
+    required String newPassword,
+  });
+  Future<Either<Failure, void>> logout();
 }

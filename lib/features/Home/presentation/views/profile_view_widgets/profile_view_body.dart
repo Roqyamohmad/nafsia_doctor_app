@@ -1,77 +1,60 @@
 import 'package:flutter/material.dart';
-import 'package:nafsia_app/core/utils/app_colors.dart';
-import 'package:nafsia_app/core/utils/app_images.dart' show Assets;
-import 'package:nafsia_app/core/utils/app_text_styles.dart' show TextStyles;
-import 'package:nafsia_app/features/Home/presentation/views/profile_view_widgets/edit_profile_view.dart'
-    show EditProfileView;
-import 'package:nafsia_app/features/Home/presentation/views/widget/custom_main_view_app_bar.dart'
-    show CustomMainViewsAppBar;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nafsia_app/core/helper_functions/build_error_bar.dart';
+import 'package:nafsia_app/core/helper_functions/get_user_data.dart';
+import 'package:nafsia_app/core/utils/constants.dart';
+import 'package:nafsia_app/core/utils/spacing.dart';
+import 'package:nafsia_app/core/widgets/custom_animated_loading_widget.dart';
+import 'package:nafsia_app/features/Home/presentation/cubits/more_cubit/more_cubit.dart';
+import 'package:nafsia_app/features/Home/presentation/cubits/more_cubit/more_state.dart';
+import 'package:nafsia_app/features/Home/presentation/views/profile_view_widgets/update_user_profile_button.dart';
+import 'package:nafsia_app/features/Home/presentation/views/profile_view_widgets/update_user_profiles_text_fields.dart';
 
-import 'build_info_tile.dart';
-
-class ProfileViewBody extends StatelessWidget {
+class ProfileViewBody extends StatefulWidget {
   const ProfileViewBody({super.key});
 
   @override
+  State<ProfileViewBody> createState() => _ProfileViewBodyState();
+}
+
+class _ProfileViewBodyState extends State<ProfileViewBody> {
+  @override
+  void initState() {
+    var cubit = context.read<MoreCubit>();
+    cubit.updatedNameController.text = getUserData().data!.user!.name!;
+    cubit.updatedPhoneController.text = getUserData().data!.user!.phone!;
+    cubit.updatedSpecializationController.text =
+        getUserData().data!.user!.doctorData!.specialization;
+    cubit.updatedAgeController.text = getUserData().data!.user!.age.toString();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Directionality(
-        textDirection: TextDirection.rtl, // تحديد الاتجاه من اليمين لليسار
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
+    var cubit = context.read<MoreCubit>();
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+          horizontal: kHorizontalPadding, vertical: kVerticalPadding),
+      child: BlocConsumer<MoreCubit, MoreState>(
+        listener: (context, state) {
+          if (state is UpdateUserProfileSuccessState) {
+            showBar(context, 'تم التعديل بنجاح');
+          } else if (state is UpdateUserProfileFailureState) {
+            showBar(context, state.errorMessage);
+          }
+        },
+        builder: (context, state) {
+          return Column(
             children: [
-              const CustomMainViewsAppBar(
-                title: ('الملف الشخصي'),
-              ),
-              const CircleAvatar(
-                radius: 60,
-                backgroundImage:
-                    AssetImage(Assets.assetsImagesProfileTestImage),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'د. أحمد علي',
-                style: TextStyles.bold28,
-              ),
-              const SizedBox(height: 4),
-              const Text(
-                'ahmed.ali@email.com',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const EditProfileView(),
-                    ),
-                  );
-                },
-                icon: const Icon(
-                  Icons.edit,
-                  color: Colors.white,
-                ),
-                label: const Text(
-                  'تعديل الملف الشخصي',
-                  style: TextStyle(color: Colors.white),
-                ),
-                style: ElevatedButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  backgroundColor: AppColors.primaryColor,
-                ),
-              ),
-              const SizedBox(height: 30),
-              const Divider(),
-              buildInfoTile(Icons.phone, 'رقم الجوال', '+966 512345678'),
-              buildInfoTile(Icons.work, 'الوظيفة', 'أخصائي نفسي'),
-              buildInfoTile(Icons.location_on, 'العنوان', 'الرياض - السعودية'),
-              buildInfoTile(Icons.language, 'اللغة', 'العربية'),
-              const Divider(),
+              verticalSpace(24),
+              UpdateUserProfileTextFields(cubit: cubit),
+              verticalSpace(48),
+              state is UpdateUserProfileLoadingState
+                  ? const Center(child: CustomAnimatedLoadingWidget())
+                  : UpdateUserProfileButton(cubit: cubit),
             ],
-          ),
-        ),
+          );
+        },
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'package:nafsia_app/features/auth/data/models/doctr_model.dart';
+
 class UserModel {
   bool? success;
   String? message;
@@ -31,6 +33,15 @@ class Data {
         if (user != null) 'user': user!.toJson(),
         'token': token,
       };
+  Data copyWith({
+    User? user,
+    String? token,
+  }) {
+    return Data(
+      user: user ?? user,
+      token: token ?? this.token,
+    );
+  }
 }
 
 class User {
@@ -43,10 +54,10 @@ class User {
   int? age;
   String? gender;
   bool? isVerified;
-  String? createdAt;
-  String? updatedAt;
+  DateTime? createdAt;
+  DateTime? updatedAt;
   String? id;
-  dynamic doctorData; // لو لسه مش معرف النوع
+  DoctorDataModel? doctorData; // ✅ بدل dynamic
 
   User({
     this.sId,
@@ -60,8 +71,8 @@ class User {
     this.isVerified,
     this.createdAt,
     this.updatedAt,
-    this.doctorData,
     this.id,
+    this.doctorData,
   });
 
   User.fromJson(Map<String, dynamic> json)
@@ -74,10 +85,16 @@ class User {
         age = json['age'],
         gender = json['gender'],
         isVerified = json['isVerified'],
-        createdAt = json['createdAt'],
-        updatedAt = json['updatedAt'],
-        doctorData = json['doctorData'],
-        id = json['id'];
+        createdAt = json['createdAt'] != null
+            ? DateTime.tryParse(json['createdAt'].toString())
+            : null,
+        updatedAt = json['updatedAt'] != null
+            ? DateTime.tryParse(json['updatedAt'].toString())
+            : null,
+        id = json['id'],
+        doctorData = json['doctorData'] != null
+            ? DoctorDataModel.fromJson(json['doctorData'])
+            : null;
 
   Map<String, dynamic> toJson() => {
         '_id': sId,
@@ -89,11 +106,43 @@ class User {
         'age': age,
         'gender': gender,
         'isVerified': isVerified,
-        'createdAt': createdAt,
-        'updatedAt': updatedAt,
-        'doctorData': doctorData,
+        'createdAt': createdAt?.toIso8601String(),
+        'updatedAt': updatedAt?.toIso8601String(),
+        'doctorData': doctorData?.toJson(),
         'id': id,
       };
+
+  User copyWith({
+    String? sId,
+    String? name,
+    String? email,
+    String? password,
+    String? phone,
+    String? role,
+    int? age,
+    String? gender,
+    bool? isVerified,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? id,
+    DoctorDataModel? doctorData,
+  }) {
+    return User(
+      sId: sId ?? this.sId,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      phone: phone ?? this.phone,
+      role: role ?? this.role,
+      age: age ?? this.age,
+      gender: gender ?? this.gender,
+      isVerified: isVerified ?? this.isVerified,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      doctorData: doctorData ?? this.doctorData,
+      id: id ?? this.id,
+    );
+  }
 }
 
 /*

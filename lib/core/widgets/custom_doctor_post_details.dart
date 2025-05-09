@@ -29,6 +29,7 @@ class CustomDoctorPostDetails extends StatelessWidget {
           doctorData.name,
           style: TextStyles.semiBold16,
         ),
+        horizontalSpace(8),
         Text(
           timeago.format(createdAt, locale: 'ar'),
           style: TextStyles.semiBold16.copyWith(color: Colors.grey),

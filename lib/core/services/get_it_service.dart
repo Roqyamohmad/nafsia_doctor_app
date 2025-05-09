@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:nafsia_app/core/services/api_consumer.dart';
 import 'package:nafsia_app/core/services/dio_consumer.dart';
+import 'package:nafsia_app/features/Home/data/repos/appointment_repo.dart';
+import 'package:nafsia_app/features/Home/data/repos/appointment_repo_imp.dart';
 import 'package:nafsia_app/features/Home/data/repos/home_repo_implementation.dart';
 import 'package:nafsia_app/features/auth/data/repo/auth_repo_impl.dart'
     show AuthRepoImpl;
@@ -27,4 +29,7 @@ void setupGetIt() {
 
   // Register AddPostCubit (factory because Cubit is stateful)
   getIt.registerFactory<AddPostCubit>(() => AddPostCubit(getIt<HomeRepo>()));
+
+  getIt.registerSingleton<AppointmentRepo>(
+      AppointmentRepositoryImplementation(getIt<ApiConsumer>()));
 }

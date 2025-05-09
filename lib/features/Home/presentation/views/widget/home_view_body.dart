@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nafsia_app/core/helper_functions/get_user_data.dart'
+    show getUserData;
 // import 'package:nafsia_app/core/helper_functions/build_error_bar.dart';
 import 'package:nafsia_app/core/utils/app_colors.dart';
 import 'package:nafsia_app/core/utils/spacing.dart';
@@ -10,7 +12,9 @@ import 'package:nafsia_app/features/Home/presentation/views/widget/add_post_view
 import 'package:nafsia_app/features/Home/presentation/views/widget/custom_home_app_bar.dart';
 
 class HomeViewBody extends StatelessWidget {
-  const HomeViewBody({super.key});
+  HomeViewBody({super.key});
+
+  final doc = getUserData().data?.user;
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +34,11 @@ class HomeViewBody extends StatelessWidget {
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          const SliverToBoxAdapter(
+          SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: CustomHomeAppBar(),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: CustomHomeAppBar(doctorData: doc),
             ),
           ),
           SliverToBoxAdapter(

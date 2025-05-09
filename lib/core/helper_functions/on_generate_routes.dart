@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:nafsia_app/features/Home/presentation/views/change_appointment_view.dart';
+import 'package:nafsia_app/features/Home/presentation/views/change_password_view.dart';
 
 import 'package:nafsia_app/features/Home/presentation/views/main_view.dart'
     show MainView;
+import 'package:nafsia_app/features/Home/presentation/views/profile_view.dart';
 import 'package:nafsia_app/features/auth/presentation/views/forget_password_view.dart';
 import 'package:nafsia_app/features/auth/presentation/views/signin_view.dart'
     show SigninView;
@@ -34,6 +37,15 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
           builder: (context) => ResetPasswordView(
                 otp: opt,
               ));
+    case ProfileView.routename:
+      return MaterialPageRoute(builder: (context) => const ProfileView());
+    case ChangeAppointmentView.routeName:
+      return MaterialPageRoute(
+          builder: (context) => const ChangeAppointmentView());
+
+    case ChangePasswordView.routename:
+      return MaterialPageRoute(
+          builder: (context) => const ChangePasswordView());
     default:
       return MaterialPageRoute(builder: (context) => const Scaffold());
   }

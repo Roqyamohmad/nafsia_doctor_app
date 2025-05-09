@@ -24,7 +24,7 @@ class SeatCounter extends StatelessWidget {
             padding: WidgetStateProperty.all(EdgeInsets.zero),
           ),
           onPressed: () {
-            if (currentSeats < 10) {
+            if (currentSeats < 1000) {
               onSeatsChanged(currentSeats + 1);
             }
           },

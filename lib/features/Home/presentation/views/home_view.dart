@@ -16,7 +16,7 @@ class HomeView extends StatelessWidget {
     print(getUserData().data?.token);
     return BlocProvider(
       create: (context) => HomeCubit(getIt<HomeRepo>())..getAllPosts(),
-      child: const HomeViewBody(),
+      child: HomeViewBody(),
     );
   }
 }

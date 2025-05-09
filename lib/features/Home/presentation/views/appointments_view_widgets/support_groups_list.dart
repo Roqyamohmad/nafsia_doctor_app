@@ -1,14 +1,13 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:nafsia_app/features/Home/domain/entities/support_group_entity.dart';
 import 'package:nafsia_app/core/utils/app_text_styles.dart';
 import 'package:nafsia_app/features/Home/presentation/views/appointments_view_widgets/info_row.dart'
     show infoRow;
 
 class SupportGroupsList extends StatefulWidget {
-  final List<SupportGroupDataEntity> supportGroups;
 
-  const SupportGroupsList({super.key, required this.supportGroups});
+  const SupportGroupsList({super.key,});
 
   @override
   State<SupportGroupsList> createState() => _SupportGroupsListState();
@@ -72,3 +71,4 @@ class _SupportGroupsListState extends State<SupportGroupsList> {
     );
   }
 }
+*/
