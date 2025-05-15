@@ -20,9 +20,17 @@ class BackendEndpoint {
   static const String changeUserPassword = 'user';
 
   static const String addAppointment = 'appointment';
-  static String updateAppointment(String postId) => 'appointment/$postId';
-  static String deleteAppointment(String postId) => 'appointment/$postId';
+  static String updateAppointment(String appointmentId) =>
+      'appointment/$appointmentId';
+  static String deleteAppointment(String appointmentId) =>
+      'appointment/$appointmentId';
   static String getAppointments = 'appointment';
 
-  static String createCommunitySession = '/session/community-session';
+  static String createCommunitySession = 'session/community-session';
+  static String getSessionsById(String postId) => 'session/$postId';
+  static String getSeessions = 'session';
+  static String updateSessionComplete(String sessionId) =>
+      'session/$sessionId/complete';
+  static String confermCancleSession(String sessionId) =>
+      '/session/private-session/$sessionId/confirm';
 }

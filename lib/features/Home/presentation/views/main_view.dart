@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nafsia_app/features/Home/presentation/views/appointments_view.dart';
 import 'package:nafsia_app/features/Home/presentation/views/chats_view.dart'
     show ChatsView;
+import 'package:nafsia_app/features/Home/presentation/views/group_chat_view.dart';
 import 'package:nafsia_app/features/Home/presentation/views/home_view.dart'
     show HomeView;
 import 'package:nafsia_app/features/Home/presentation/views/more_view.dart';
@@ -42,6 +43,7 @@ class _MainViewState extends State<MainView> {
               HomeView(),
               ChatsView(),
               AppointmentsView(),
+              GroupChatView(),
               MoreView(),
             ],
           ),

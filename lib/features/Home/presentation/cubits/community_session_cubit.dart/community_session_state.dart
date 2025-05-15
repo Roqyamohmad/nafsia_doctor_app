@@ -7,9 +7,9 @@ class CommunitySessionInitial extends CommunitySessionState {}
 class CommunitySessionLoading extends CommunitySessionState {}
 
 class CommunitySessionSuccess extends CommunitySessionState {
-  final CommunitySessionModel session;
+  final List<Data> sessions;
 
-  CommunitySessionSuccess(this.session);
+  CommunitySessionSuccess(this.sessions);
 }
 
 class CommunitySessionFailure extends CommunitySessionState {

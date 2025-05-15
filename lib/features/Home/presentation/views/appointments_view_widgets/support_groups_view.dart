@@ -6,36 +6,39 @@ import 'package:nafsia_app/core/utils/spacing.dart';
 import 'package:nafsia_app/core/widgets/custom_text_field.dart';
 import 'package:nafsia_app/features/Home/presentation/cubits/community_session_cubit.dart/community_session_cubit.dart';
 import 'package:nafsia_app/features/Home/presentation/cubits/community_session_cubit.dart/community_session_state.dart';
-import 'package:nafsia_app/features/Home/presentation/views/chats_view_widgets/seat_selection.dart';
-import 'package:nafsia_app/features/Home/presentation/views/chats_view_widgets/time_selection.dart';
+import 'package:nafsia_app/features/Home/presentation/views/appointments_view_widgets/seat_selection.dart';
+import 'package:nafsia_app/features/Home/presentation/views/appointments_view_widgets/time_selection.dart';
 import 'package:nafsia_app/features/Home/data/model/community_session_model.dart';
 
 Future<CommunitySessionModel?> showSupportGroupsView(BuildContext context) {
   final titleController = TextEditingController();
   final priceController = TextEditingController();
   final meetLinkController = TextEditingController();
+  final descriptionController = TextEditingController();
   int selectedSeats = 1;
   TimeOfDay selectedStartTime = const TimeOfDay(hour: 6, minute: 30);
-  TimeOfDay selectedEndTime = const TimeOfDay(hour: 7, minute: 30); // جديد
-  DateTime selectedStartDate = DateTime.now(); // جديد
-  DateTime selectedEndDate = DateTime.now(); // جديد
+  TimeOfDay selectedEndTime = const TimeOfDay(hour: 7, minute: 30);
+  DateTime selectedStartDate = DateTime.now();
+  DateTime selectedEndDate = DateTime.now();
+  List<String> tags = [];
 
-  // احصل على الـ cubit قبل الدخول للـ showDialog
   final cubit = context.read<CommunitySessionCubit>();
+  // BuildContext? dialogContext;
 
   return showDialog<CommunitySessionModel>(
     context: context,
     barrierDismissible: false,
     builder: (context) {
+      // dialogContext = context; // حفظ سياق الـ dialog
       return BlocProvider.value(
-        value: cubit, // مررنا cubit هنا يدويًا
+        value: cubit,
         child: BlocListener<CommunitySessionCubit, CommunitySessionState>(
           listener: (context, state) {
             if (state is CommunitySessionSuccess) {
+              Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('تمت إضافة الجلسة بنجاح')),
               );
-              Navigator.pop(context, state.session);
             } else if (state is CommunitySessionFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('خطأ: ${state.error}')),
@@ -54,7 +57,6 @@ Future<CommunitySessionModel?> showSupportGroupsView(BuildContext context) {
                   style: TextStyles.bold23,
                 ),
                 content: SingleChildScrollView(
-                  // استخدام التمرير
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -70,15 +72,48 @@ Future<CommunitySessionModel?> showSupportGroupsView(BuildContext context) {
                         textInputType: TextInputType.text,
                       ),
                       verticalSpace(12),
+                      CustomTextFormField(
+                        maxLines: 5,
+                        controller: descriptionController,
+                        labelText: "وصف مجموعة الدعم",
+                        textInputType: TextInputType.text,
+                      ),
+                      verticalSpace(12),
                       SeatSelection(
                         selectedSeats: selectedSeats,
                         onSeatsChanged: (value) => setState(() {
                           selectedSeats = value;
                         }),
                       ),
-                      // داخل Column:
                       verticalSpace(12),
-// صف يحتوي على وقت البداية والنهاية
+                      Row(
+                        children: [
+                          OutlinedButton(
+                            onPressed: () async {
+                              final pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: selectedStartDate,
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime(2100),
+                              );
+                              if (pickedDate != null) {
+                                setState(() {
+                                  selectedStartDate = pickedDate;
+                                  selectedEndDate = pickedDate;
+                                });
+                              }
+                            },
+                            child: Text(
+                              "${selectedStartDate.toLocal()}".split(' ')[0],
+                            ),
+                          ),
+                          Text(
+                            "      تاريخ الجلسة",
+                            style: TextStyles.bold16,
+                          ),
+                        ],
+                      ),
+                      verticalSpace(12),
                       Row(
                         children: [
                           Expanded(
@@ -90,7 +125,7 @@ Future<CommunitySessionModel?> showSupportGroupsView(BuildContext context) {
                               label: "بداية الجلسة",
                             ),
                           ),
-                          SizedBox(width: 8), // مسافة بسيطة بين العنصرين
+                          SizedBox(width: 8),
                           Expanded(
                             child: TimeSelection(
                               selectedTime: selectedEndTime,
@@ -103,7 +138,6 @@ Future<CommunitySessionModel?> showSupportGroupsView(BuildContext context) {
                         ],
                       ),
                       verticalSpace(12),
-
                       CustomTextFormField(
                         controller: priceController,
                         labelText: "سعر الجلسة",
@@ -122,7 +156,7 @@ Future<CommunitySessionModel?> showSupportGroupsView(BuildContext context) {
                       return ElevatedButton(
                         onPressed: state is CommunitySessionLoading
                             ? null
-                            : () {
+                            : () async {
                                 final title = titleController.text.trim();
                                 final priceText = priceController.text.trim();
                                 final meetLink = meetLinkController.text.trim();
@@ -131,7 +165,6 @@ Future<CommunitySessionModel?> showSupportGroupsView(BuildContext context) {
                                     priceText.isEmpty ||
                                     meetLink.isEmpty) return;
 
-                                // حساب الـ duration بناءً على الفرق بين الوقتين
                                 final startAt = DateTime(
                                   selectedStartDate.year,
                                   selectedStartDate.month,
@@ -151,15 +184,31 @@ Future<CommunitySessionModel?> showSupportGroupsView(BuildContext context) {
                                 final durationInMinutes =
                                     endAt.difference(startAt).inMinutes;
 
+                                final price = int.tryParse(priceText) ?? 0;
+
                                 context
                                     .read<CommunitySessionCubit>()
                                     .createCommunitySession(
-                                      meetLink: meetLink,
+                                      tags: tags.isEmpty ? [] : tags,
+                                      description: descriptionController.text
+                                              .trim()
+                                              .isNotEmpty
+                                          ? descriptionController.text.trim()
+                                          : 'لا يوجد وصف',
+                                      meetLink: meetLink.isNotEmpty
+                                          ? meetLink
+                                          : 'https://defaultlink.com',
                                       startAt: startAt,
                                       duration: durationInMinutes,
                                       seats: selectedSeats,
-                                      price: int.tryParse(priceText) ?? 0,
+                                      price: price,
+                                      title: title,
                                     );
+                                final lastSessionId = cubit.sessions.last.id;
+
+                                // تأكيد: لو عايز تعمل fetch من السيرفر مرة كمان
+                                await cubit
+                                    .getCommunitySessionById(lastSessionId);
                               },
                         child: state is CommunitySessionLoading
                             ? const CircularProgressIndicator()

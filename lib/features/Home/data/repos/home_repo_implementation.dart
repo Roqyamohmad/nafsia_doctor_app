@@ -23,6 +23,12 @@ class HomeRepoImplementation extends HomeRepo {
   }) async {
     try {
       final token = getUserData().data?.token;
+      final userData = getUserData().data;
+      print('--- DEBUG ---');
+      print('Token: ${userData?.token}');
+      print('User: ${userData?.user}');
+      print('Role: ${userData?.user?.role}');
+      print('--- END DEBUG ---');
       final payload = {
         'content': content,
         'image': image,

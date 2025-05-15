@@ -10,26 +10,35 @@ class AppointmentCubit extends Cubit<AppointmentState> {
 
   Future<void> createAppointment({
     required String day,
-    required String startAtHour,
     required int duration,
     required int price,
+    required List<ScheduleItem> schedule,
   }) async {
     emit(AppointmentLoading());
     try {
       final result = await repository.createAppointment(
         day: day,
-        startAtHour: startAtHour,
         duration: duration,
         price: price,
+        schedule: schedule,
       );
 
       result.fold(
         (failure) {
           emit(AppointmentFailure(failure.message));
         },
-        (appointment) {
-          print('Created appointment id: ${appointment.id}');
-          emit(AppointmentSuccess(appointment));
+        (newAppointment) {
+          print('Created appointment id: ${newAppointment.id}');
+
+          // ✅ تحديث القائمة الحالية مباشرة بدون إخفائها
+          appointment.add(newAppointment);
+
+          emit(AppointmentSuccess(newAppointment));
+
+          // ✅ إعادة إرسال الحالة الحالية بالقائمة المعدّلة
+          emit(GetAllAppointmentSuccessState(
+            appointment: List.from(appointment),
+          ));
         },
       );
     } catch (e) {
@@ -40,16 +49,16 @@ class AppointmentCubit extends Cubit<AppointmentState> {
   Future<void> updateAppointment({
     required String appointmentId,
     required String day,
-    required String startAtHour,
     required int duration,
     required int price,
+    required List<ScheduleItem> schedule,
   }) async {
     emit(AppointmentLoading());
     try {
       final result = await repository.updateAppointment(
         appointmentId: appointmentId,
         day: day,
-        startAtHour: startAtHour,
+        schedule: schedule,
         duration: duration,
         price: price,
       );
@@ -67,15 +76,37 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     }
   }
 
-  Future<void> deleteAppointment({required String postId}) async {
+  Future<void> getAllAppointments() async {
+    emit(GetAllAppointmentLoadingState());
+    try {
+      final result = await repository.getAppointments();
+
+      result.fold(
+        (failure) {
+          emit(AppointmentFailure(failure.message));
+        },
+        (appointments) {
+          appointment = appointments;
+          emit(GetAllAppointmentSuccessState(
+              appointment: List.from(appointment)));
+        },
+      );
+    } catch (e) {
+      emit(AppointmentFailure('حدث خطأ غير متوقع أثناء الجلب: $e'));
+    }
+  }
+
+  Future<void> deleteAppointment({required String appointmentId}) async {
     emit(DeleteAppointmentLoadingState());
-    final result = await repository.deleteAppointment(postId: postId);
+    final result =
+        await repository.deleteAppointment(appointmentId: appointmentId);
 
     result.fold(
       (failure) {
         // ✅ لو السيرفر قال إن المنشور مش موجود، نمسحه محليًا كأنه اتحذف
         if (failure.message.contains("غير موجود")) {
-          appointment.removeWhere((appointment) => appointment.id == postId);
+          appointment
+              .removeWhere((appointment) => appointment.id == appointmentId);
           emit(DeleteAppointmentSuccessState());
           emit(GetAllAppointmentSuccessState(
               appointment: List.from(appointment)));
@@ -86,30 +117,14 @@ class AppointmentCubit extends Cubit<AppointmentState> {
       },
       (_) async {
         // ✅ حذف ناجح
-        appointment.removeWhere((post) => post.id == postId);
+        appointment.removeWhere((post) => post.id == appointmentId);
         emit(DeleteAppointmentSuccessState());
         emit(
             GetAllAppointmentSuccessState(appointment: List.from(appointment)));
+
+        // ✅ (اختياري) تحدث البوستات من السيرفر لو حابب تضمن أحدث نسخة
+        await getAllAppointments();
       },
     );
-  }
-
-  Future<void> getAllAppointments() async {
-    emit(AppointmentLoading());
-    try {
-      final result = await repository.getAppointments();
-
-      result.fold(
-        (failure) {
-          emit(AppointmentFailure(failure.message));
-        },
-        (appointments) {
-          appointment = appointments;
-          emit(AppointmentsLoaded(appointments));
-        },
-      );
-    } catch (e) {
-      emit(AppointmentFailure('حدث خطأ غير متوقع أثناء الجلب: $e'));
-    }
   }
 }

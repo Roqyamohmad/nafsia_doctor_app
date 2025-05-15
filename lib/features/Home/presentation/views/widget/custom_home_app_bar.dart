@@ -16,9 +16,13 @@ class CustomHomeAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          'اهلًا بك دكتور ${doctorData!.name} ^_^',
-          style: TextStyles.bold19.copyWith(color: AppColors.primaryColor),
+        Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.001),
+          child: Text(
+            '  اهلًا بك دكتور ${doctorData!.name}   ^_^',
+            style: TextStyles.bold16.copyWith(color: AppColors.primaryColor),
+          ),
         ),
         const Spacer(),
         IconButton(

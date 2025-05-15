@@ -1,0 +1,2 @@
+C:/Users/Roqya/app/nafsia_doctor_app/android/app/.cxx/RelWithDebInfo/633a1n1i/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/Roqya/app/nafsia_doctor_app/android/app/.cxx/RelWithDebInfo/633a1n1i/armeabi-v7a/CMakeFiles/rebuild_cache.dir

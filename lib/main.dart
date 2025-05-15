@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nafsia_app/core/helper_functions/on_generate_routes.dart';
 import 'package:nafsia_app/core/services/get_it_service.dart';
 import 'package:nafsia_app/core/utils/chache_helper_keys.dart';
+import 'package:nafsia_app/core/widgets/timezone_helper.dart';
 import 'package:nafsia_app/features/splash/presentation/views/splash_view.dart'
     show SplashView;
 import 'core/helper_functions/cache_helper.dart';
@@ -16,6 +17,7 @@ import 'generated/l10n.dart' show S;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await TimezoneHelper.initialize();
   Bloc.observer = MyBlocObserver();
   await CacheHelper.init();
   setupGetIt();

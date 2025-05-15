@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nafsia_app/core/services/get_it_service.dart';
 import 'package:nafsia_app/core/utils/app_colors.dart';
 import 'package:nafsia_app/core/widgets/custom_animated_loading_widget.dart';
-import 'package:nafsia_app/features/Home/data/repos/appointment_repo.dart';
 import 'package:nafsia_app/features/Home/presentation/cubits/appointment_cubit/appintment_cubit.dart';
 import 'package:nafsia_app/features/Home/presentation/cubits/appointment_cubit/appointment_state.dart';
 import 'package:nafsia_app/features/Home/data/model/appointement_data_model.dart';
-import 'package:nafsia_app/features/auth/presentation/views/widget/show_doctor_session_dialog.dart';
+import 'package:nafsia_app/features/Home/presentation/views/appointments_view_widgets/show_doctor_session_dialog.dart';
+import 'package:intl/intl.dart';
 
 class ChangeAppointmentViewBody extends StatefulWidget {
   const ChangeAppointmentViewBody({super.key});
@@ -31,10 +30,10 @@ class _ChangeAppointmentViewBodyState extends State<ChangeAppointmentViewBody> {
         backgroundColor: AppColors.primaryColor,
         body: BlocBuilder<AppointmentCubit, AppointmentState>(
           builder: (context, state) {
-            if (state is AppointmentLoading) {
+            if (state is GetAllAppointmentLoadingState) {
               return const Center(child: CircularProgressIndicator());
-            } else if (state is AppointmentsLoaded) {
-              final appointments = state.appointments;
+            } else if (state is GetAllAppointmentSuccessState) {
+              final appointments = state.appointment;
               if (appointments.isEmpty) {
                 return const Center(child: Text('لا توجد مواعيد حالياً.'));
               }
@@ -68,13 +67,15 @@ class AppointmentCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        title: Text('اليوم: ${appointment.day ?? '-'}'),
+        title: Text('اليوم: ${_formatDay(appointment.day)}'),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('الوقت: ${appointment.startAtHour ?? '-'}'),
             Text('المدة: ${appointment.duration} دقيقة'),
             Text('السعر: ${appointment.price} جنيه'),
+            const SizedBox(height: 4),
+            const Text('المواعيد:'),
+            ...appointment.schedule!.map((item) => Text('⏰ ${item.startAt}')),
           ],
         ),
         trailing: Row(
@@ -86,9 +87,8 @@ class AppointmentCard extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => BlocProvider(
-                      create: (context) =>
-                          AppointmentCubit(getIt<AppointmentRepo>()),
+                    builder: (_) => BlocProvider.value(
+                      value: context.read<AppointmentCubit>(),
                       child: DoctorSessionDialog(
                         existingAppointment: appointment,
                       ),
@@ -100,7 +100,7 @@ class AppointmentCard extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),
               onPressed: () async {
-                confirmdelete(context);
+                confirmDelete(context);
               },
             ),
           ],
@@ -109,28 +109,27 @@ class AppointmentCard extends StatelessWidget {
     );
   }
 
-  Future<dynamic> confirmdelete(BuildContext context) {
+  Future<dynamic> confirmDelete(BuildContext context) {
     return showDialog(
       context: context,
       builder: (dialogContext) =>
           BlocListener<AppointmentCubit, AppointmentState>(
-        bloc: context.read<AppointmentCubit>(), // هنا السر 👈
+        bloc: context.read<AppointmentCubit>(),
         listener: (context, state) {
           if (state is DeleteAppointmentSuccessState) {
-            Navigator.pop(
-                dialogContext); // نستخدم dialogContext مش context الأصلي
+            Navigator.pop(dialogContext);
             ScaffoldMessenger.of(dialogContext).showSnackBar(
-              const SnackBar(content: Text('تم حذف المنشور بنجاح')),
+              const SnackBar(content: Text('تم حذف الموعد بنجاح')),
             );
           } else if (state is DeleteAppointmentFailureState) {
             ScaffoldMessenger.of(dialogContext).showSnackBar(
-              SnackBar(content: Text('فشل حذف المنشور')),
+              const SnackBar(content: Text('فشل حذف الموعد')),
             );
           }
         },
         child: AlertDialog(
           title: const Text('تأكيد الحذف'),
-          content: const Text('هل أنت متأكد من حذف المنشور؟'),
+          content: const Text('هل أنت متأكد من حذف هذا الموعد؟'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
@@ -140,7 +139,7 @@ class AppointmentCard extends StatelessWidget {
               onPressed: () {
                 context
                     .read<AppointmentCubit>()
-                    .deleteAppointment(postId: appointment.id!);
+                    .deleteAppointment(appointmentId: appointment.id!);
               },
               child: const Text('حذف'),
             ),
@@ -148,5 +147,16 @@ class AppointmentCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _formatDay(String? isoString) {
+    if (isoString == null) return '-';
+    try {
+      final dateTime = DateTime.parse(isoString).toLocal();
+      return DateFormat('d MMMM yyyy', 'ar')
+          .format(dateTime); // Ex: 13 مايو 2025
+    } catch (e) {
+      return isoString;
+    }
   }
 }

@@ -9,7 +9,7 @@ export 'resent_code.dart';
 export 'verify_otp_view_body.dart.dart';
 export 'session_day_selector.dart';
 export 'session_time_selector.dart';
-export 'show_doctor_session_dialog.dart';
+export '../../../../Home/presentation/views/appointments_view_widgets/show_doctor_session_dialog.dart';
 export 'signin_view_body.dart';
 export 'signup_view_body.dart';
 export 'social_login_button.dart';

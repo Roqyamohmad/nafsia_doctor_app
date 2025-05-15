@@ -30,6 +30,11 @@ List<ButtonNavigationBarEntity> buttonNavigationBarEntityList = [
     inActiveImage: Assets.assetsImagesCalendarInactive,
   ),
   ButtonNavigationBarEntity(
+    name: (context) => 'مجموعاتي',
+    activeImage: Assets.assetsImagesGroupChatactive,
+    inActiveImage: Assets.assetsImagesGroupChatInactive,
+  ),
+  ButtonNavigationBarEntity(
     name: (context) => 'الملف الشخصي',
     activeImage: Assets.assetsImagesUserActive,
     inActiveImage: Assets.assetsImagesUserInactive,
