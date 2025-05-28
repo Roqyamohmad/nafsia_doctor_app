@@ -33,4 +33,9 @@ class BackendEndpoint {
       'session/$sessionId/complete';
   static String confermCancleSession(String sessionId) =>
       '/session/private-session/$sessionId/confirm';
+
+  static String addmessage = 'message';
+  static String getAllMessages(String messageId) => 'message/$messageId';
+  static String deleteMessage(String messageId) => 'message/$messageId';
+  static String updateMessage(String messageId) => 'message/$messageId';
 }

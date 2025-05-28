@@ -17,7 +17,10 @@ dependencies:
   cupertino_icons: ^1.0.8
   dartz: ^0.10.1
   dio: ^5.8.0+1
+  faker: ^2.2.0
   firebase_auth: ^5.5.1
+  firebase_core: ^3.13.1
+  firebase_messaging: ^15.2.6
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.0
@@ -38,8 +41,10 @@ dependencies:
   timeago: ^3.7.0
   timezone: ^0.10.1
   uuid: ^4.5.1
-
-dev_dependencies:
+  zego_uikit_prebuilt_call: ^4.16.29
+  zego_uikit_signaling_plugin: ^2.8.12
+  zego_zimkit: ^1.18.17
+dev_dhmilependencies:
   flutter_launcher_icons: ^0.14.3
   flutter_lints: ^4.0.0
   flutter_test:

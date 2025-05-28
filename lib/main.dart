@@ -10,18 +10,29 @@ import 'core/helper_functions/cache_helper.dart';
 import 'core/utils/app_colors.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'core/utils/bloc_observer.dart';
 import 'features/Home/presentation/views/main_view.dart';
 import 'generated/l10n.dart' show S;
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
+
   await TimezoneHelper.initialize();
   Bloc.observer = MyBlocObserver();
   await CacheHelper.init();
   setupGetIt();
-  runApp(const MyApp());
+  ZegoUIKit().initLog().then((value) {
+    ZegoUIKitPrebuiltCallInvitationService().useSystemCallingUI(
+      [ZegoUIKitSignalingPlugin()],
+    );
+
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -40,6 +51,7 @@ class MyApp extends StatelessWidget {
             child: child!,
           );
         },
+        navigatorKey: navigatorKey,
         title: 'Nafsia',
         theme: ThemeData(
           fontFamily: 'Cairo',

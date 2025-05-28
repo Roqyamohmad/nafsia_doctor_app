@@ -6,6 +6,7 @@ import 'package:nafsia_app/core/errors/custom_exceptions.dart';
 import 'package:nafsia_app/core/errors/failures.dart';
 import 'package:nafsia_app/core/helper_functions/get_user_data.dart';
 import 'package:nafsia_app/core/services/api_consumer.dart' show ApiConsumer;
+import 'package:nafsia_app/core/services/zego_service.dart';
 import 'package:nafsia_app/core/utils/backend_endpoint.dart';
 import 'package:nafsia_app/features/auth/data/models/doctr_model.dart';
 import 'package:nafsia_app/features/auth/data/models/user_model.dart';
@@ -58,7 +59,10 @@ class AuthRepoImpl extends AuthRepo {
       final userModelData = UserModel.fromJson(response); // ✅ هنا التعديل
 
       await saveUserData(userModelData);
-
+      await initializeZego(
+        userModelData.data!.user!.id!,
+        userModelData.data!.user!.name!,
+      );
       return right(null);
     } on ServerException catch (e) {
       print('ServerException: ${e.errorModel.errorMessage}');
@@ -96,6 +100,12 @@ class AuthRepoImpl extends AuthRepo {
         },
       );
       final userModelData = UserModel.fromJson(response); // ✅ هنا التعديل
+      await initializeZego(
+        userModelData.data!.user!.id!,
+        userModelData.data!.user!.name!,
+      );
+      print('👤 userID: $userModelData.data!.user!.id!');
+      print('👤 userName: $userModelData.data!.user!.name!');
 
       await saveUserData(userModelData);
       return right(null);

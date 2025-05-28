@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nafsia_app/core/helper_functions/get_user_data.dart';
+import 'package:nafsia_app/core/services/zego_service.dart';
 import 'package:nafsia_app/features/Home/presentation/views/appointments_view.dart';
 import 'package:nafsia_app/features/Home/presentation/views/chats_view.dart'
     show ChatsView;
@@ -20,8 +22,32 @@ class MainView extends StatefulWidget {
 
 class _MainViewState extends State<MainView> {
   int selectedIndex = 0;
+  @override
+  initState() {
+    initializeZego(
+      getUserData().data!.user!.id!,
+      getUserData().data!.user!.name!,
+    );
+    super.initState();
+  }
 
-  void _onItemTapped(int index) {
+  bool isZegoInitialized = false;
+
+  void _onItemTapped(int index) async {
+    // If user is navigating to the Chats tab (index 1)
+    if (index == 1 && !isZegoInitialized) {
+      final user = getUserData().data!.user!;
+
+      try {
+        await initializeZego(user.id!, user.name!);
+        isZegoInitialized = true; // Mark as initialized
+      } catch (e) {
+        debugPrint("Zego Initialization failed: $e");
+        // Optionally show a dialog or snack bar
+        return; // prevent navigation if init failed
+      }
+    }
+
     setState(() {
       selectedIndex = index;
     });

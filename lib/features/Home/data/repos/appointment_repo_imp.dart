@@ -6,6 +6,7 @@ import 'package:nafsia_app/core/helper_functions/get_user_data.dart';
 import 'package:nafsia_app/core/services/api_consumer.dart';
 import 'package:nafsia_app/core/utils/backend_endpoint.dart';
 import 'package:nafsia_app/features/Home/data/model/appointement_data_model.dart';
+import 'package:nafsia_app/features/Home/data/model/community_messages_model.dart';
 import 'package:nafsia_app/features/Home/data/model/community_session_model.dart';
 
 import 'appointment_repo.dart';
@@ -170,29 +171,114 @@ class AppointmentRepositoryImplementation extends AppointmentRepo {
     }
   }
 
- @override
-Future<Either<Failure, List<Data>>> getAllCommunitySessions({
-  required String doctorId,
-  required String sessionStatus,
-  required String sessionType,
-}) async {
-  try {
-    final token = getUserData().data?.token;
+  @override
+  Future<Either<Failure, List<Data>>> getAllCommunitySessions({
+    required String doctorId,
+    required String sessionStatus,
+    required String sessionType,
+  }) async {
+    try {
+      final token = getUserData().data?.token;
 
-    final response = await apiConsumer.get(
-      '${BackendEndpoint.getSeessions}?doctorId=$doctorId&sessionStatus=$sessionStatus&sessionType=$sessionType',
-      headers: {'Authorization': 'Bearer $token'},
-    );
+      final response = await apiConsumer.get(
+        '${BackendEndpoint.getSeessions}?doctorId=$doctorId&sessionStatus=$sessionStatus&sessionType=$sessionType',
+        headers: {'Authorization': 'Bearer $token'},
+      );
 
-    final List<dynamic> dataList = response['data'] ?? [];
-    final sessions = dataList.map((item) => Data.fromJson(item)).toList();
+      final List<dynamic> dataList = response['data'] ?? [];
+      final sessions = dataList.map((item) => Data.fromJson(item)).toList();
 
-    return Right(sessions);
-  } catch (e) {
-    print("Error in getAllCommunitySessions: $e");
-    return Left(ServerFailure(message: 'فشل في جلب الجلسات'));
+      return Right(sessions);
+    } catch (e) {
+      print("Error in getAllCommunitySessions: $e");
+      return Left(ServerFailure(message: 'فشل في جلب الجلسات'));
+    }
   }
-}
 
+  @override
+  Future<Either<Failure, CommunityMessageModel>> addMessages({
+    required String sessionId,
+    required String message,
+  }) async {
+    try {
+      final response = await apiConsumer.post(
+        BackendEndpoint.addmessage,
+        data: {'message': message, 'sessionId': sessionId},
+        headers: {'Authorization': 'Bearer ${getUserData().data?.token}'},
+      );
 
+      final newMessage = CommunityMessageModel.fromJson(response['data']);
+      return Right(newMessage);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<CommunityMessageModel>>> getAllMessages({
+    required String sessionId,
+  }) async {
+    try {
+      final token = getUserData().data?.token;
+
+      final response = await apiConsumer.get(
+        BackendEndpoint.getAllMessages(sessionId),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      final List<dynamic> dataList = response['data'] ?? [];
+
+      final messages =
+          dataList.map((item) => CommunityMessageModel.fromJson(item)).toList();
+
+      return Right(messages);
+    } catch (e) {
+      print("Error in getAllMessages: $e");
+      return Left(ServerFailure(message: 'فشل في جلب الرسائل'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteMessage({
+    required String messageId,
+  }) async {
+    try {
+      final token = getUserData().data?.token;
+
+      await apiConsumer.delete(
+        BackendEndpoint.deleteMessage(messageId),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      return const Right(null);
+    } catch (e) {
+      print("Error in deleteMessage: $e");
+      return Left(ServerFailure(message: 'فشل في حذف الرسالة'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updateMessage({
+    required String messageId,
+    required String updatedMessage,
+  }) async {
+    try {
+      final token = getUserData().data?.token;
+
+      final response = await apiConsumer.patch(
+        BackendEndpoint.updateMessage(messageId),
+        data: {'message': updatedMessage},
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response == null || response['success'] != true) {
+        throw Exception('Unexpected response format');
+      }
+
+      return const Right(true); // ما فيش بيانات نرجعها، فقط تأكيد
+    } catch (e) {
+      print("Error in updateMessage: $e");
+      return Left(ServerFailure(message: 'فشل في تعديل الرسالة'));
+    }
+  }
 }
