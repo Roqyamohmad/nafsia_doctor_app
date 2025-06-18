@@ -29,7 +29,6 @@ abstract class AppointmentRepo {
   Future<Either<Failure, Data>> createCommunitySession({
     required DateTime startAt,
     required int duration,
-    required int price,
     required String title,
     required int seats,
     required String meetLink,
@@ -54,4 +53,7 @@ abstract class AppointmentRepo {
     required String messageId,
     required String updatedMessage,
   });
+
+  Future<Either<Failure, bool>> markSessionComplete(
+      {required String sessionId});
 }

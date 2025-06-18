@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nafsia_app/core/utils/constants.dart';
 import 'package:nafsia_app/core/utils/spacing.dart' show verticalSpace;
-import 'package:nafsia_app/core/widgets/search_text_field.dart'
-    show SearchTextField;
+
 import 'package:nafsia_app/features/Home/presentation/views/chats_view_widgets/zIMKit_conversation_listView.dart';
 import 'package:nafsia_app/features/Home/presentation/views/widget/custom_main_view_app_bar.dart';
 

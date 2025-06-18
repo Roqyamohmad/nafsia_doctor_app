@@ -48,3 +48,12 @@ final class GetAllAppointmentFailureState extends AppointmentState {
   final String errorMessage;
   GetAllAppointmentFailureState({required this.errorMessage});
 }
+
+final class MarkSessionCompleteLoading extends AppointmentState {}
+
+final class MarkSessionCompleteSuccess extends AppointmentState {}
+
+final class MarkSessionCompleteError extends AppointmentState {
+  final String errorMessage;
+  MarkSessionCompleteError({required this.errorMessage});
+}

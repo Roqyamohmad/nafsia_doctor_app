@@ -31,25 +31,27 @@ class ImageFormField extends FormField<File?> {
                           border: Border.all(
                               color: field.hasError ? Colors.red : Colors.grey),
                         ),
-                        child: state.fileImage != null
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
-                                child: Image.file(
-                                  state.fileImage!,
-                                  width: double.infinity,
-                                  height: 180,
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            : const Center(
-                                child: Icon(
-                                  Icons.image_outlined,
-                                  size: 80,
-                                  color: Colors.grey,
-                                ),
-                              ),
+                        child: state.isLoading
+                            ? const Center(child: CircularProgressIndicator())
+                            : state.fileImage != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(16),
+                                    child: Image.file(
+                                      state.fileImage!,
+                                      width: double.infinity,
+                                      height: 180,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : const Center(
+                                    child: Icon(
+                                      Icons.image_outlined,
+                                      size: 80,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
                       ),
-                      if (state.fileImage != null)
+                      if (!state.isLoading && state.fileImage != null)
                         Positioned(
                           top: 8,
                           right: 8,
@@ -100,7 +102,7 @@ class _ImageFormFieldState extends FormFieldState<File?> {
         didChange(fileImage);
       }
     } catch (e) {
-      debugPrint('Error picking image: $e');
+      debugPrint('Error picking image: \$e');
     }
     setState(() => isLoading = false);
   }

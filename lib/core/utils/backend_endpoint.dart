@@ -1,5 +1,5 @@
 class BackendEndpoint {
-  static const String baseUrl = 'https://nafsia.up.railway.app/api/v1/';
+  static const String baseUrl = 'https://nafsia-v2.up.railway.app/api/v1/';
   static const String forgetPassword = 'auth/forgot-password';
   static const String verifyOtp = 'auth/verify-otp';
   static const String resetPassword = 'auth/reset-password';

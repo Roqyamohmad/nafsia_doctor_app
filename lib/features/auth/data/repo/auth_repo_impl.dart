@@ -8,6 +8,7 @@ import 'package:nafsia_app/core/helper_functions/get_user_data.dart';
 import 'package:nafsia_app/core/services/api_consumer.dart' show ApiConsumer;
 import 'package:nafsia_app/core/services/zego_service.dart';
 import 'package:nafsia_app/core/utils/backend_endpoint.dart';
+//import 'package:nafsia_app/features/auth/data/models/avater_model.dart';
 import 'package:nafsia_app/features/auth/data/models/doctr_model.dart';
 import 'package:nafsia_app/features/auth/data/models/user_model.dart';
 import 'package:nafsia_app/features/auth/domain/repos/auth_repo.dart';
@@ -28,6 +29,7 @@ class AuthRepoImpl extends AuthRepo {
     required String gender,
     required String phoneNumber,
     required String specialty,
+    required String description,
     required MultipartFile profileImage,
     required MultipartFile licenseImage,
   }) async {
@@ -40,12 +42,10 @@ class AuthRepoImpl extends AuthRepo {
       'password': password,
       'age': age.toString(),
       'email': email,
+      'description': description,
+      'avatar': profileImage, // ✅ أضف صورة البروفايل
+      'medicalLicense': licenseImage,
     });
-
-    formData.files.addAll([
-      MapEntry('image', profileImage),
-      MapEntry('image', licenseImage),
-    ]);
 
     try {
       final response = await apiConsumer.post(
@@ -59,6 +59,10 @@ class AuthRepoImpl extends AuthRepo {
       final userModelData = UserModel.fromJson(response); // ✅ هنا التعديل
 
       await saveUserData(userModelData);
+      print('✅ TOKEN: ${userModelData.data?.token}');
+      print('✅ USER ID: ${userModelData.data?.user?.id}');
+      print('✅ USER NAME: ${userModelData.data?.user?.name}');
+
       await initializeZego(
         userModelData.data!.user!.id!,
         userModelData.data!.user!.name!,
@@ -99,6 +103,8 @@ class AuthRepoImpl extends AuthRepo {
           'password': password,
         },
       );
+      print(response.runtimeType); // هل هي Map ولا Response؟
+
       final userModelData = UserModel.fromJson(response); // ✅ هنا التعديل
       await initializeZego(
         userModelData.data!.user!.id!,

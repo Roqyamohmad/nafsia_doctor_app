@@ -57,7 +57,7 @@ class UpdateUserProfileTextFields extends StatelessWidget {
         verticalSpace(16.h),
         CustomTextFormField(
           textInputType: TextInputType.text,
-          labelText: getUserData().data!.user!.doctorData!.specialization,
+          labelText: getUserData().data!.user!.doctorData!.specialization!,
           controller: cubit.updatedSpecializationController,
           onChanged: (value) {
             cubit.userMakeChanges();

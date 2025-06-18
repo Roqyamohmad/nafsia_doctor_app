@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nafsia_app/constant.dart';
 import 'package:nafsia_app/core/helper_functions/get_user_data.dart';
-import 'package:nafsia_app/core/widgets/custom_app_bar.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:zego_zimkit/zego_zimkit.dart';
 

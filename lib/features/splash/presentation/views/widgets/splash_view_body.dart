@@ -1,6 +1,11 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:nafsia_app/core/helper_functions/cache_helper.dart';
 import 'package:nafsia_app/core/utils/app_colors.dart';
 import 'package:nafsia_app/core/utils/app_images.dart';
+import 'package:nafsia_app/core/utils/chache_helper_keys.dart';
+import 'package:nafsia_app/features/Home/presentation/views/main_view.dart';
+import 'package:nafsia_app/features/auth/data/models/user_model.dart';
 import 'package:nafsia_app/features/auth/presentation/views/signin_view.dart';
 
 class SplashViewBody extends StatefulWidget {
@@ -13,8 +18,8 @@ class SplashViewBody extends StatefulWidget {
 class _SplashViewBodyState extends State<SplashViewBody> {
   @override
   void initState() {
-    excuteNaviagtion();
     super.initState();
+    executeNavigation();
   }
 
   @override
@@ -29,7 +34,6 @@ class _SplashViewBodyState extends State<SplashViewBody> {
               width: 470,
               height: 270,
               decoration: const BoxDecoration(
-                shape: BoxShape.rectangle, // يجعلها دائرية
                 image: DecorationImage(
                   image: AssetImage(Assets.assetsImagesIconSpla),
                   fit: BoxFit.cover,
@@ -57,10 +61,28 @@ class _SplashViewBodyState extends State<SplashViewBody> {
     );
   }
 
-  void excuteNaviagtion() {
-    Future.delayed(const Duration(seconds: 3), () {
-      // ignore: use_build_context_synchronously
-      Navigator.pushNamed(context, SigninView.routeName);
-    });
+  void executeNavigation() async {
+    await Future.delayed(const Duration(seconds: 3));
+
+    final cachedData = CacheHelper.getData(key: kSaveUserDataKey);
+
+    if (cachedData != null && cachedData is String) {
+      try {
+        final user = UserModel.fromJson(jsonDecode(cachedData));
+
+        if (user.data?.user?.isVerified == true) {
+          // المستخدم مسجل ومفعل
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacementNamed(context, MainView.routeName);
+          return;
+        }
+      } catch (e) {
+        debugPrint("Error parsing user data: $e");
+      }
+    }
+
+    // المستخدم مش مسجل أو البيانات فيها مشكلة
+    // ignore: use_build_context_synchronously
+    Navigator.pushReplacementNamed(context, SigninView.routeName);
   }
 }

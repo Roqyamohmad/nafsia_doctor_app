@@ -24,7 +24,7 @@ class _ProfileViewBodyState extends State<ProfileViewBody> {
     cubit.updatedNameController.text = getUserData().data!.user!.name!;
     cubit.updatedPhoneController.text = getUserData().data!.user!.phone!;
     cubit.updatedSpecializationController.text =
-        getUserData().data!.user!.doctorData!.specialization;
+        getUserData().data!.user!.doctorData!.specialization!;
     cubit.updatedAgeController.text = getUserData().data!.user!.age.toString();
     super.initState();
   }

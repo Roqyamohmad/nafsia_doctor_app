@@ -15,7 +15,6 @@ class CommunitySessionCubit extends Cubit<CommunitySessionState> {
   Future<void> createCommunitySession({
     required DateTime startAt,
     required int duration,
-    required int price,
     required int seats,
     required String meetLink,
     required String title,
@@ -26,7 +25,6 @@ class CommunitySessionCubit extends Cubit<CommunitySessionState> {
     final result = await appointmentRepo.createCommunitySession(
       startAt: startAt,
       duration: duration,
-      price: price,
       seats: seats,
       meetLink: meetLink,
       title: title,

@@ -12,7 +12,6 @@ import 'package:nafsia_app/features/Home/data/model/community_session_model.dart
 
 Future<CommunitySessionModel?> showSupportGroupsView(BuildContext context) {
   final titleController = TextEditingController();
-  final priceController = TextEditingController();
   final meetLinkController = TextEditingController();
   final descriptionController = TextEditingController();
   int selectedSeats = 1;
@@ -137,12 +136,14 @@ Future<CommunitySessionModel?> showSupportGroupsView(BuildContext context) {
                           ),
                         ],
                       ),
+                      /*
                       verticalSpace(12),
                       CustomTextFormField(
                         controller: priceController,
                         labelText: "سعر الجلسة",
                         textInputType: TextInputType.number,
                       ),
+                      */
                     ],
                   ),
                 ),
@@ -158,12 +159,9 @@ Future<CommunitySessionModel?> showSupportGroupsView(BuildContext context) {
                             ? null
                             : () async {
                                 final title = titleController.text.trim();
-                                final priceText = priceController.text.trim();
                                 final meetLink = meetLinkController.text.trim();
 
-                                if (title.isEmpty ||
-                                    priceText.isEmpty ||
-                                    meetLink.isEmpty) return;
+                                if (title.isEmpty || meetLink.isEmpty) return;
 
                                 final startAt = DateTime(
                                   selectedStartDate.year,
@@ -184,8 +182,6 @@ Future<CommunitySessionModel?> showSupportGroupsView(BuildContext context) {
                                 final durationInMinutes =
                                     endAt.difference(startAt).inMinutes;
 
-                                final price = int.tryParse(priceText) ?? 0;
-
                                 context
                                     .read<CommunitySessionCubit>()
                                     .createCommunitySession(
@@ -201,7 +197,6 @@ Future<CommunitySessionModel?> showSupportGroupsView(BuildContext context) {
                                       startAt: startAt,
                                       duration: durationInMinutes,
                                       seats: selectedSeats,
-                                      price: price,
                                       title: title,
                                     );
                                 final lastSessionId = cubit.sessions.last.id;

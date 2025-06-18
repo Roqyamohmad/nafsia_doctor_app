@@ -1,6 +1,7 @@
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+//import 'package:nafsia_app/features/auth/data/models/avater_model.dart';
 import 'package:nafsia_app/features/auth/domain/repos/auth_repo.dart';
 import 'package:nafsia_app/features/auth/presentation/cubits/signup_cubits/signup_state.dart';
 
@@ -17,31 +18,28 @@ class SignupCubit extends Cubit<SignupState> {
     required String gender,
     required String phoneNumber,
     required String specialty,
+    required String description,
     required MultipartFile profileImage,
     required MultipartFile licenseImage,
   }) async {
     emit(SignupLoading());
 
-    try {
-      final result = await authRepo.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-        name: name,
-        age: age,
-        gender: gender,
-        phoneNumber: phoneNumber,
-        specialty: specialty,
-        profileImage: profileImage,
-        licenseImage: licenseImage,
-      );
+    final result = await authRepo.createUserWithEmailAndPassword(
+      description: description,
+      email: email,
+      password: password,
+      name: name,
+      age: age,
+      gender: gender,
+      phoneNumber: phoneNumber,
+      specialty: specialty,
+      profileImage: profileImage,
+      licenseImage: licenseImage,
+    );
 
-      result.fold((failure) {
-        emit(SignupFailure(message: failure.message));
-      }, (_) {
-        emit(SignupSuccess(message: 'تم إنشاء الحساب بنجاح'));
-      });
-    } catch (e) {
-      emit(SignupFailure(message: e.toString()));
-    }
+    result.fold(
+      (failure) => emit(SignupFailure(message: failure.message)),
+      (_) => emit(SignupSuccess(message: 'تم إنشاء الحساب بنجاح')),
+    );
   }
 }

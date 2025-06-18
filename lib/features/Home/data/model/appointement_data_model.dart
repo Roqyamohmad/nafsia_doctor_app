@@ -8,6 +8,7 @@ class AppointmentDataModel {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final DoctorModel? doctorData;
+  final String? status; // 👈 تمت الإضافة هنا
 
   AppointmentDataModel({
     this.id,
@@ -19,6 +20,7 @@ class AppointmentDataModel {
     this.createdAt,
     this.updatedAt,
     this.doctorData,
+    this.status,
   });
 
   factory AppointmentDataModel.fromJson(Map<String, dynamic> json) {
@@ -39,6 +41,7 @@ class AppointmentDataModel {
       doctorData: data['doctorData'] != null
           ? DoctorModel.fromJson(data['doctorData'])
           : null,
+      status: data['status'],
     );
   }
 
@@ -53,6 +56,7 @@ class AppointmentDataModel {
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
       'doctorData': doctorData?.toJson(),
+      'status': status,
     };
   }
 }

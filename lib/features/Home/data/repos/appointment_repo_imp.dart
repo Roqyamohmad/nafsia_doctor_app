@@ -118,7 +118,6 @@ class AppointmentRepositoryImplementation extends AppointmentRepo {
   Future<Either<Failure, Data>> createCommunitySession({
     required DateTime startAt,
     required int duration,
-    required int price,
     required int seats,
     required String meetLink,
     required String title,
@@ -130,7 +129,6 @@ class AppointmentRepositoryImplementation extends AppointmentRepo {
       final data = {
         'startAt': startAt.toIso8601String(),
         'duration': duration,
-        'price': price,
         'seats': seats,
         'meetLink': meetLink,
         'title': title,
@@ -279,6 +277,28 @@ class AppointmentRepositoryImplementation extends AppointmentRepo {
     } catch (e) {
       print("Error in updateMessage: $e");
       return Left(ServerFailure(message: 'فشل في تعديل الرسالة'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> markSessionComplete(
+      {required String sessionId}) async {
+    try {
+      final token = getUserData().data?.token;
+
+      final response = await apiConsumer.post(
+        BackendEndpoint.updateSessionComplete(sessionId),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response == null || response['success'] != true) {
+        throw Exception('Unexpected response format');
+      }
+
+      return const Right(true);
+    } catch (e) {
+      print("Error in markSessionAsComplete: $e");
+      return Left(ServerFailure(message: 'فشل في تحديد الجلسة كمكتملة'));
     }
   }
 }

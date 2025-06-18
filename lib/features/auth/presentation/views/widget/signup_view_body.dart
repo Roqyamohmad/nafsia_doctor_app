@@ -10,6 +10,7 @@ import 'package:nafsia_app/core/utils/app_text_styles.dart';
 import 'package:nafsia_app/core/utils/spacing.dart';
 import 'package:nafsia_app/core/widgets/custom_button.dart';
 import 'package:nafsia_app/core/widgets/password_field.dart';
+//import 'package:nafsia_app/features/auth/data/models/avater_model.dart';
 import 'package:nafsia_app/features/auth/presentation/cubits/signup_cubits/signup_cubit.dart';
 import 'package:nafsia_app/features/auth/presentation/views/widget/index.dart';
 import 'package:http_parser/http_parser.dart';
@@ -30,15 +31,10 @@ class _SignupViewBodyState extends State<SignupViewBody> {
   String? selectedGender;
   File? avatarImage;
   File? licenseImage;
-  late bool isTermsAccepted = false;
 
-  late String name,
-      email,
-      password,
-      phoneNumber,
-      specialty,
-      medicalLicenseNumber,
-      licensingAuthority;
+  bool isTermsAccepted = false;
+
+  late String name, email, password, phoneNumber, specialty, description;
   late int age;
 
   @override
@@ -98,20 +94,12 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                 onSaved: (value) => specialty = value!,
               ),
               verticalSpace(16),
-              /*
-              CustomTextFormField(
-                textInputType: TextInputType.number,
-                labelText: 'رقم الترخيص الطبي',
-                onSaved: (value) => medicalLicenseNumber = value!,
-              ),
-              verticalSpace(16),
               CustomTextFormField(
                 textInputType: TextInputType.text,
-                labelText: 'الجهة المانحه للترخيص',
-                onSaved: (value) => licensingAuthority = value!,
+                labelText: 'الوصف الطبي',
+                onSaved: (value) => description = value!,
               ),
               verticalSpace(16),
-              */
               CustomTextFormField(
                 textInputType: TextInputType.emailAddress,
                 labelText: 'البريد الإلكتروني',
@@ -121,15 +109,6 @@ class _SignupViewBodyState extends State<SignupViewBody> {
               PasswordField(
                 onSaved: (value) => password = value!,
               ),
-              verticalSpace(16),
-              /*
-              CustomButton(
-                text: 'تحديد مواعيد الجلسات',
-                onPressed: () {
-                  showDoctorSessionDialog(context);
-                },
-              ),
-              */
               verticalSpace(16),
               // صورة البروفايل
               Directionality(
@@ -155,10 +134,8 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                   ],
                 ),
               ),
-
               verticalSpace(16),
-
-// صورة الرخصة الطبية
+              // صورة الرخصة الطبية
               Directionality(
                 textDirection: TextDirection.rtl,
                 child: Column(
@@ -182,7 +159,6 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                   ],
                 ),
               ),
-
               TermsAndConditions(
                 onChanged: (value) {
                   isTermsAccepted = value;
@@ -193,46 +169,50 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                 text: 'إنشاء حساب',
                 onPressed: () async {
                   if (isTermsAccepted && selectedGender != null) {
-                    formKey.currentState!.save();
+                    if (formKey.currentState!.validate()) {
+                      formKey.currentState!.save();
 
-                    if (avatarImage != null && licenseImage != null) {
-                      final profileImage = await MultipartFile.fromFile(
-                        avatarImage!.path,
-                        filename: avatarImage!.path.split('/').last,
-                        contentType: MediaType(
-                            'image', detectMimeType(avatarImage!.path)),
-                      );
+                      if (avatarImage != null && licenseImage != null) {
+                        final profileImage = await MultipartFile.fromFile(
+                          avatarImage!.path,
+                          filename: avatarImage!.path.split('/').last,
+                          contentType: MediaType(
+                              'image', detectMimeType(avatarImage!.path)),
+                        );
 
-                      final licenseFile = await MultipartFile.fromFile(
-                        licenseImage!.path,
-                        filename: licenseImage!.path.split('/').last,
-                        contentType: MediaType(
-                            'image', detectMimeType(licenseImage!.path)),
-                      );
+                        final licenseFile = await MultipartFile.fromFile(
+                          licenseImage!.path,
+                          filename: licenseImage!.path.split('/').last,
+                          contentType: MediaType(
+                              'image', detectMimeType(licenseImage!.path)),
+                        );
 
-                      context
-                          .read<SignupCubit>()
-                          .createUserWithEmailAndPassword(
-                            email: email,
-                            password: password,
-                            name: name,
-                            age: age,
-                            gender: selectedGender!,
-                            phoneNumber: phoneNumber,
-                            specialty: specialty,
-                            profileImage: profileImage,
-                            licenseImage: licenseFile,
-                          );
+                        context
+                            .read<SignupCubit>()
+                            .createUserWithEmailAndPassword(
+                              email: email,
+                              password: password,
+                              name: name,
+                              age: age,
+                              gender: selectedGender!,
+                              phoneNumber: phoneNumber,
+                              specialty: specialty,
+                              profileImage: profileImage,
+                              licenseImage: licenseFile,
+                              description: description,
+                            );
+                      } else {
+                        showBar(context, 'برجاء رفع صور البروفايل والترخيص');
+                      }
                     } else {
-                      showBar(context, 'برجاء رفع صور البروفايل والترخيص');
+                      setState(() {
+                        autovalidateMode = AutovalidateMode.always;
+                      });
                     }
                   } else {
                     if (!isTermsAccepted) {
                       showBar(context, 'برجاء الموافقة على الشروط ');
                     }
-                    setState(() {
-                      autovalidateMode = AutovalidateMode.always;
-                    });
                   }
                 },
               ),

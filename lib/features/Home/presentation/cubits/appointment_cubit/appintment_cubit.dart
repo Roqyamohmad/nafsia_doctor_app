@@ -127,4 +127,15 @@ class AppointmentCubit extends Cubit<AppointmentState> {
       },
     );
   }
+
+  Future<void> markSessionComplete(String sessionId) async {
+    emit(MarkSessionCompleteLoading());
+    final result = await repository.markSessionComplete(sessionId: sessionId);
+    result.fold(
+      (failure) => emit(MarkSessionCompleteError(
+        errorMessage: failure.message,
+      )),
+      (success) => emit(MarkSessionCompleteSuccess()),
+    );
+  }
 }

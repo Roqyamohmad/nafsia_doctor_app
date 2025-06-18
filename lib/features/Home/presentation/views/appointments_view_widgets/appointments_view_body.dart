@@ -41,54 +41,52 @@ class _AppointmentsViewBodyState extends State<AppointmentsViewBody> {
 
     return BlocProvider.value(
       value: appointmentCubit,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: kHorizontalPadding,
-          vertical: kVerticalPadding,
+      child: Scaffold(
+        // ✅ أضف Scaffold هنا
+        floatingActionButton: FloatingActionButton.extended(
+          // ✅ الزر هنا
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (dialogContext) => BlocProvider.value(
+                value: appointmentCubit,
+                child: const DoctorSessionDialog(),
+              ),
+            );
+          },
+          icon: const Icon(
+            Icons.calendar_today,
+            color: AppColors.primaryColor,
+          ),
+          label: Text(
+            'إضافة جلسة',
+            style: TextStyles.medium15.copyWith(color: AppColors.primaryColor),
+          ),
+          backgroundColor: AppColors.backGroundyColor,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // العنوان الرئيسي
-            const CustomMainViewsAppBar(title: 'المواعيد'),
-
-            verticalSpace(8),
-
-            // مواعيد السيشنات
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "مواعيد السيشنات",
-                style:
-                    TextStyles.bold16.copyWith(color: AppColors.primaryColor),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: kHorizontalPadding,
+            vertical: kVerticalPadding,
+          ),
+          child: ListView(
+            children: [
+              const CustomMainViewsAppBar(title: 'المواعيد'),
+              verticalSpace(8),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "مواعيد السيشنات",
+                  style:
+                      TextStyles.bold16.copyWith(color: AppColors.primaryColor),
+                ),
               ),
-            ),
-
-            SizedBox(
-              height: height * 0.6,
-              child: AppointmentsSessionsList(),
-            ),
-
-            verticalSpace(16),
-
-            // زر إضافة مواعيد الجلسات فقط
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (dialogContext) => BlocProvider.value(
-                      value: appointmentCubit,
-                      child: const DoctorSessionDialog(),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.calendar_today),
-                label: const Text('تحديد مواعيد الجلسات'),
+              SizedBox(
+                height: height * 0.9,
+                child: AppointmentsSessionsList(),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

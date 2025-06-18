@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nafsia_app/core/utils/app_colors.dart';
-import 'package:nafsia_app/core/utils/app_images.dart';
 import 'package:nafsia_app/core/utils/spacing.dart';
 import 'package:nafsia_app/core/widgets/custom_button.dart' show CustomButton;
 import 'package:nafsia_app/core/widgets/custom_text_field.dart'
@@ -11,9 +10,6 @@ import 'package:nafsia_app/features/auth/presentation/views/forget_password_view
 import 'package:nafsia_app/features/auth/presentation/views/widget/dont_have_account.dart'
     show DontHaveAnAccount;
 import 'package:nafsia_app/features/auth/presentation/views/widget/login_view_body_logo_and_title.dart';
-import 'package:nafsia_app/features/auth/presentation/views/widget/or_divider.dart'
-    show OrDivider;
-import 'package:nafsia_app/features/auth/presentation/views/widget/social_login_button.dart';
 
 import '../../../../../core/utils/app_text_styles.dart';
 import '../../cubits/signin_cubits/signin_cubit.dart';
@@ -87,13 +83,6 @@ class _SigninViewBodyState extends State<SigninViewBody> {
               verticalSpace(16),
               const DontHaveAnAccount(),
               verticalSpace(30),
-              const OrDivider(),
-              verticalSpace(60),
-              SocialLoginButton(
-                image: Assets.assetsImagesGoogleIcon,
-                title: 'تسجيل الدخول بواسطة جوجل',
-                onPressed: () {},
-              ),
             ],
           ),
         ),

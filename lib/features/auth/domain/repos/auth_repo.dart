@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+//import 'package:nafsia_app/features/auth/data/models/avater_model.dart';
 import '../../../../core/errors/failures.dart';
 
 abstract class AuthRepo {
@@ -11,6 +12,7 @@ abstract class AuthRepo {
     required String gender,
     required String phoneNumber,
     required String specialty,
+    required String description,
     required MultipartFile profileImage,
     required MultipartFile licenseImage,
   });
